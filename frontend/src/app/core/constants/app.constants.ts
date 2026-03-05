@@ -1,0 +1,63 @@
+export const APP_CONSTANTS = {
+    DEVICES: [
+        { id: 'FFS_A320', name: 'A320 Full Flight Simulator' },
+        { id: 'FFS_B737', name: 'B737 Full Flight Simulator' },
+        { id: 'FFS_A330', name: 'A330 Full Flight Simulator' },
+        { id: 'FFS_B777', name: 'B777 Full Flight Simulator' },
+        { id: 'FFS_B787', name: 'B787 Full Flight Simulator' },
+    ],
+    ATA_CODES: [
+        { code: '21', description: 'Air Conditioning' },
+        { code: '22', description: 'Auto Flight' },
+        { code: '23', description: 'Communications' },
+        { code: '24', description: 'Electrical Power' },
+        { code: '25', description: 'Equipment/Furnishings' },
+        { code: '26', description: 'Fire Protection' },
+        { code: '27', description: 'Flight Controls' },
+        { code: '28', description: 'Fuel' },
+        { code: '29', description: 'Hydraulic Power' },
+        { code: '30', description: 'Ice and Rain Protection' },
+        { code: '31', description: 'Indicating/Recording Systems' },
+        { code: '32', description: 'Landing Gear' },
+        { code: '33', description: 'Lights' },
+        { code: '34', description: 'Navigation' },
+        { code: '35', description: 'Oxygen' },
+        { code: '36', description: 'Pneumatic' },
+        { code: '38', description: 'Water/Waste' },
+        { code: '49', description: 'Airborne Auxiliary Power' },
+        { code: '52', description: 'Doors' },
+        { code: '53', description: 'Fuselage' },
+        { code: '54', description: 'Nacelles/Pylons' },
+        { code: '55', description: 'Stabilizers' },
+        { code: '56', description: 'Windows' },
+        { code: '57', description: 'Wings' },
+        { code: '71', description: 'Power Plant' },
+        { code: '72', description: 'Engine' },
+        { code: '73', description: 'Engine Fuel and Control' },
+        { code: '74', description: 'Ignition' },
+        { code: '75', description: 'Air' },
+        { code: '76', description: 'Engine Controls' },
+        { code: '77', description: 'Engine Indicating' },
+        { code: '78', description: 'Exhaust' },
+        { code: '79', description: 'Oil' },
+        { code: '80', description: 'Starting' },
+    ],
+    STATUS_LIST: [
+        { id: 'OPEN', name: 'Open', color: 'danger' },
+        { id: 'IN_PROGRESS', name: 'In Progress', color: 'warning' },
+        { id: 'CLOSED', name: 'Closed', color: 'success' },
+        { id: 'DEFERRED', name: 'Deferred', color: 'secondary' },
+        { id: 'MONITORING', name: 'Monitoring', color: 'info' }
+    ],
+    PART_STATUS_LIST: [
+        { id: 'IN_STOCK', name: 'In Stock', badgeClass: 'bg-success' },
+        { id: 'LOW_STOCK', name: 'Low Stock', badgeClass: 'bg-warning text-dark' },
+        { id: 'OUT_OF_STOCK', name: 'Out of Stock', badgeClass: 'bg-danger' }
+    ],
+    REPORT_TYPES: [
+        { id: 'SHIFT_DIARY', name: 'Shift Diary Report' },
+        { id: 'DR_ISSUE_SUMMARY', name: 'DR Issue Summary' },
+        { id: 'MAINTENANCE_SUMMARY', name: 'Maintenance Summary' },
+        { id: 'PARTS_INVENTORY', name: 'Parts Inventory Report' }
+    ]
+};

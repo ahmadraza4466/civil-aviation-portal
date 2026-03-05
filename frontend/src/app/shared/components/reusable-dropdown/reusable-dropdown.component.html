@@ -1,0 +1,10 @@
+<div class="mb-2">
+    <label *ngIf="label" [for]="id" class="form-label text-secondary fw-semibold mb-1 fs-7">{{ label }}</label>
+    <select [id]="id" class="form-select form-select-sm shadow-none" [disabled]="isDisabled" [(ngModel)]="value"
+        (change)="onSelectChange($event)">
+        <option [value]="null">{{ placeholder }}</option>
+        <option *ngFor="let option of options" [value]="getOptionValue(option)">
+            {{ getOptionLabel(option) }}
+        </option>
+    </select>
+</div>

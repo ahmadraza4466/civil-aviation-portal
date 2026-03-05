@@ -1,0 +1,78 @@
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h2 class="fw-bold text-white mb-0" style="letter-spacing: 0.1em;"><i
+                class="bi bi-box-seam me-2 text-primary"></i>Parts Inventory</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a routerLink="/app/dashboard"
+                        style="color: #64748b; text-decoration: none;">Home</a></li>
+                <li class="breadcrumb-item active text-secondary" aria-current="page">Inventory</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card dark-panel-card border-start border-primary border-4 py-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+                            style="font-size: 0.65rem; letter-spacing: 1px;">Total Parts</h6>
+                        <div class="h3 mb-0 font-weight-bold text-white">{{ totalParts }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dark-panel-card border-start border-warning border-4 py-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+                            style="font-size: 0.65rem; letter-spacing: 1px;">Low Stock Items</h6>
+                        <div class="h3 mb-0 font-weight-bold text-white">{{ lowStockCount }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dark-panel-card border-start border-danger border-4 py-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+                            style="font-size: 0.65rem; letter-spacing: 1px;">Out of Stock</h6>
+                        <div class="h3 mb-0 font-weight-bold text-white">{{ outOfStockCount }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card dark-panel-card border-0">
+            <div class="card-header py-4 d-flex flex-row align-items-center justify-content-between"
+                style="background-color: transparent; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <h6 class="m-0 font-weight-bold text-secondary text-uppercase"
+                    style="letter-spacing: 1px; font-size: 0.75rem;"><i
+                        class="bi bi-list-check me-2 text-primary"></i>Inventory List</h6>
+                <div class="dropdown no-arrow">
+                    <button class="btn btn-neon-blue btn-pill px-4" (click)="onAdd()">
+                        <i class="bi bi-plus-lg me-1"></i> Add Part
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <app-reusable-table [columns]="tableColumns" [data]="filteredParts" [itemsPerPage]="10"
+                    (view)="onViewHistory($event)" (edit)="onEdit($event)" (delete)="onDelete($event)">
+                </app-reusable-table>
+            </div>
+        </div>
+    </div>
+</div>

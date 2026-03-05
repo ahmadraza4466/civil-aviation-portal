@@ -1,0 +1,104 @@
+<div class="login-wrapper">
+    <!-- Animated Aviation Background Elements -->
+    <div class="clouds">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="cloud cloud-4"></div>
+    </div>
+
+    <div class="flying-plane">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"
+                fill="#9ba9be" opacity="0.6" />
+        </svg>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container shadow-lg slide-up-container">
+        <div class="row g-0 h-100">
+            <!-- Left Side Image -->
+            <div class="col-lg-7 d-none d-lg-block position-relative h-100 p-0 image-col">
+                <img src="/assets/images/plane_bg.png" alt="Airplane" class="bg-image bg-pan-anim">
+                <div class="image-overlay"></div>
+                <div class="image-text-overlay">
+                    <h1 class="fw-light mb-1 ps-2 fade-in-text">"BIG DATA,</h1>
+                    <h1 class="fw-light ps-5 fade-in-text">BIG SKY"</h1>
+                </div>
+            </div>
+
+            <!-- Right Side Form -->
+            <div class="col-lg-5 col-12 d-flex flex-column justify-content-center align-items-center form-col bg-white">
+                <div class="w-100 form-content-wrapper px-4 px-md-5">
+
+                    <!-- Logo Area -->
+                    <div class="text-center mb-5 brand-logo-area stagger-1">
+                        <div class="logo-wings mb-2">
+                            <svg width="180" height="40" viewBox="0 0 200 50" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 25 L20 10 L80 40 Z" fill="#172554" opacity="0.6" />
+                                <path d="M100 25 L180 10 L120 40 Z" fill="#172554" opacity="0.6" />
+                                <path d="M15 5 L90 20 L15 15 Z" fill="#101827" />
+                                <path d="M185 5 L110 20 L185 15 Z" fill="#101827" />
+                                <path d="M25 0 L95 18 L25 8 Z" fill="#101827" opacity="0.8" />
+                                <path d="M175 0 L105 18 L175 8 Z" fill="#101827" opacity="0.8" />
+                                <text x="100" y="32" font-family="Arial, sans-serif" font-size="28" font-weight="300"
+                                    letter-spacing="4" fill="#101827" text-anchor="middle">CAP</text>
+                            </svg>
+                        </div>
+                        <p class="brand-subtitle mb-0">CIVIL AVIATION PORTAL</p>
+                    </div>
+
+                    <h4 class="text-center mb-4 login-title stagger-2">Member Login</h4>
+
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+                        <!-- Username Input -->
+                        <div class="mb-4 position-relative custom-input-wrapper stagger-3">
+                            <i class="bi bi-person input-icon"></i>
+                            <input type="email" id="email" class="form-control custom-pill-input"
+                                formControlName="email" placeholder="user"
+                                [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+                            <div class="invalid-feedback ms-4"
+                                *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                                Valid email required.
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="mb-4 position-relative custom-input-wrapper stagger-4">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input type="password" id="password" class="form-control custom-pill-input"
+                                formControlName="password" placeholder="password"
+                                [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+                            <div class="invalid-feedback ms-4"
+                                *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                                Password is required.
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-5 mb-4 stagger-5">
+                            <button type="submit"
+                                class="btn text-white rounded-pill px-5 py-2 fw-medium shadow-sm auth-btn"
+                                [disabled]="isSubmitting">
+                                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                                    aria-hidden="true"></span>
+                                Authenticate
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <!-- Links -->
+                    <!-- <div class="d-flex justify-content-between align-items-center mt-4 px-3 helper-links">
+                        <a href="javascript:void(0)" class="text-decoration-none fst-italic link-hover">Forgot your
+                            password?</a>
+                        <a href="javascript:void(0)" class="text-decoration-none fst-italic link-hover">New user</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

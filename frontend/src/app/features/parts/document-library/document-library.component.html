@@ -1,0 +1,58 @@
+<div class="container-fluid py-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold text-white mb-0" style="letter-spacing: 0.1em;"><i
+                    class="bi bi-file-earmark-text me-2 text-primary"></i>Document Library</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a routerLink="/app/dashboard"
+                            style="color: #64748b; text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item active text-secondary" aria-current="page">Documents</li>
+                </ol>
+            </nav>
+        </div>
+        <button class="btn btn-neon-blue btn-pill px-4"><i class="bi bi-upload me-2"></i>Upload Document</button>
+    </div>
+
+    <div class="card dark-panel-card border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark-custom align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="ps-4">Document Name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Date Uploaded</th>
+                            <th scope="col" class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let doc of documents">
+                            <td class="ps-4 fw-medium text-white">
+                                <i class="bi"
+                                    [ngClass]="doc.type === 'PDF' ? 'bi-file-earmark-pdf text-danger' : 'bi-file-earmark-word text-primary'"
+                                    class="me-3 fs-5"></i>
+                                {{ doc.name }}
+                            </td>
+                            <td><span class="badge"
+                                    style="background-color: rgba(255,255,255,0.1); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);">{{
+                                    doc.type }}</span></td>
+                            <td class="text-secondary" style="font-size: 0.85rem;">{{ doc.size }}</td>
+                            <td class="text-secondary" style="font-size: 0.85rem; font-family: monospace;">{{ doc.date
+                                }}</td>
+                            <td class="text-end pe-4 gap-2">
+                                <button class="btn btn-sm btn-outline-info border-0 me-2" (click)="viewDoc(doc.name)">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                                <button class="btn btn-sm btn-outline-success border-0" (click)="downloadDoc(doc.name)">
+                                    <i class="bi bi-download"></i> Download
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

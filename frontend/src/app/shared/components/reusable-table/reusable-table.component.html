@@ -1,0 +1,74 @@
+<div class="table-responsive">
+    <table class="table table-hover table-dark-custom align-middle mb-0">
+        <thead>
+            <tr>
+                <th *ngFor="let col of columns" scope="col">{{ col.header }}</th>
+                <th scope="col" *ngIf="view.observers.length || edit.observers.length || delete.observers.length"
+                    class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of paginatedData">
+                <td *ngFor="let col of columns">
+                    <ng-container *ngIf="col.key === 'status'; else defaultText">
+                        <div class="progress"
+                            style="height: 1.25rem; background-color: rgba(255,255,255,0.05); border-radius: 50rem; border: 1px solid rgba(255,255,255,0.1); width: 100px; position: relative; overflow: hidden;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated fw-bold d-flex align-items-center justify-content-center text-white"
+                                role="progressbar" [ngClass]="getBadgeClass(item[col.key])"
+                                [style.width]="getProgressBarWidth(item[col.key])"
+                                style="font-size: 0.65rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); transition: width 0.6s ease;">
+                                <span class="position-absolute w-100 text-center" style="z-index: 2; left: 0;">{{
+                                    item[col.key] | uppercase }}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #defaultText>
+                        {{ item[col.key] }}
+                    </ng-template>
+                </td>
+                <td *ngIf="view.observers.length || edit.observers.length || delete.observers.length" class="text-end">
+                    <div class="btn-group gap-1">
+                        <button *ngIf="view.observers.length" class="btn btn-sm btn-outline-info border-0"
+                            title="View Details" (click)="view.emit(item)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button *ngIf="edit.observers.length" class="btn btn-sm btn-outline-warning border-0"
+                            title="Edit" (click)="edit.emit(item)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button *ngIf="delete.observers.length" class="btn btn-sm btn-outline-danger border-0"
+                            title="Delete" (click)="delete.emit(item)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="paginatedData.length === 0">
+                <td [attr.colspan]="columns.length + 1" class="text-center py-4 text-secondary">
+                    <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                    {{ emptyMessage }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-between align-items-center p-3 border-top"
+    style="border-color: rgba(255,255,255,0.05) !important;" *ngIf="_data.length > itemsPerPage">
+    <div class="text-secondary small">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ currentPage * itemsPerPage > _data.length ?
+        _data.length : currentPage * itemsPerPage }} of {{ _data.length }} entries
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-sm"
+            style="background-color: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);"
+            [disabled]="currentPage === 1" (click)="prevPage()">Prev</button>
+        <button class="btn btn-sm"
+            style="background-color: rgba(255,255,255,0.02); color: #64748b; border: 1px solid rgba(255,255,255,0.1);"
+            disabled>Page {{ currentPage }} of {{ totalPages || 1
+            }}</button>
+        <button class="btn btn-sm"
+            style="background-color: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);"
+            [disabled]="currentPage === totalPages || totalPages === 0" (click)="nextPage()">Next</button>
+    </div>
+</div>

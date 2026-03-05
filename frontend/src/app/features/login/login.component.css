@@ -1,0 +1,428 @@
+.login-wrapper {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #101827 0%, #172554 100%);
+  background-image: url("/assets/images/plane_bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container {
+  position: relative;
+  z-index: 1;
+  width: 80%;
+  max-width: 1000px;
+  height: 70vh;
+  min-height: 500px;
+  background-color: transparent;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.image-col {
+  overflow: hidden;
+  background-color: #172554;
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(16, 24, 39, 0.2) 0%, rgba(16, 24, 39, 0.6) 100%);
+  z-index: 1;
+}
+
+.image-text-overlay {
+  position: absolute;
+  top: 60%;
+  left: 10%;
+  transform: translateY(-50%);
+  color: #f8fafc;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  font-family: Arial, sans-serif;
+  letter-spacing: 2px;
+  z-index: 2;
+}
+
+.image-text-overlay h1 {
+  font-size: 2.2rem;
+  font-style: italic;
+  font-weight: 300 !important;
+}
+
+.form-col {
+  background-color: #ffffff !important;
+  position: relative;
+  border-left: 2px solid #e2e8f0;
+}
+
+.brand-subtitle {
+  font-family: Arial, sans-serif;
+  font-size: 0.65rem;
+  color: #64748b;
+  letter-spacing: 1.5px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: -10px;
+}
+
+.login-title {
+  color: #101827;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  margin-bottom: 2.5rem !important;
+  font-size: 1.4rem;
+}
+
+.custom-input-wrapper {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 1.4rem;
+  /* Adjusted for better alignment given possible error text below */
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1.1rem;
+  z-index: 3;
+}
+
+.custom-pill-input {
+  border-radius: 50rem !important;
+  padding-left: 3.2rem !important;
+  height: 2.8rem;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #334155;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-pill-input:focus {
+  border-color: #38bdf8 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25) !important;
+  outline: none;
+}
+
+.custom-pill-input::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.auth-btn {
+  background-color: #38bdf8;
+  border-color: #38bdf8;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  color: white !important;
+}
+
+.auth-btn:hover {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.helper-links {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.link-hover {
+  font-size: 0.8rem;
+  color: #38bdf8 !important;
+  text-decoration-color: transparent !important;
+  transition: text-decoration-color 0.3s ease;
+}
+
+.link-hover:hover {
+  text-decoration: underline !important;
+  text-decoration-color: #38bdf8 !important;
+}
+
+.fade-in-text {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* New Animations */
+
+.slide-up-container {
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bg-pan-anim {
+  animation: bgPan 25s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes bgPan {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+[class*="stagger-"] {
+  opacity: 0;
+  animation: fadeInForm 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-1 {
+  animation-delay: 0.3s;
+}
+
+.stagger-2 {
+  animation-delay: 0.4s;
+}
+
+.stagger-3 {
+  animation-delay: 0.5s;
+}
+
+.stagger-4 {
+  animation-delay: 0.6s;
+}
+
+.stagger-5 {
+  animation-delay: 0.7s;
+}
+
+@keyframes fadeInForm {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- OVERALL ANIMATED AVIATION WALLPAPER --- */
+.login-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: url("/assets/images/plane_bg.png") center/cover no-repeat;
+  filter: blur(2px) brightness(0.7);
+  animation: bgPanFull 35s linear infinite alternate;
+  z-index: 0;
+}
+
+@keyframes bgPanFull {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  50% {
+    transform: scale(1.05) translate(-2%, 2%);
+  }
+
+  100% {
+    transform: scale(1.1) translate(2%, -2%);
+  }
+}
+
+/* Clouds System */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 200px;
+  filter: blur(15px);
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  width: 300px;
+  height: 80px;
+  top: 15%;
+  left: -30%;
+  animation: moveClouds 40s linear infinite;
+}
+
+.cloud-1::before {
+  width: 130px;
+  height: 130px;
+  top: -60px;
+  left: 40px;
+}
+
+.cloud-1::after {
+  width: 90px;
+  height: 90px;
+  top: -30px;
+  left: 150px;
+}
+
+.cloud-2 {
+  width: 250px;
+  height: 70px;
+  top: 35%;
+  left: -30%;
+  animation: moveClouds 35s linear infinite 15s;
+  opacity: 0.7;
+}
+
+.cloud-2::before {
+  width: 110px;
+  height: 110px;
+  top: -50px;
+  left: 30px;
+}
+
+.cloud-2::after {
+  width: 70px;
+  height: 70px;
+  top: -30px;
+  left: 120px;
+}
+
+.cloud-3 {
+  width: 400px;
+  height: 120px;
+  top: 65%;
+  left: -40%;
+  animation: moveClouds 50s linear infinite 5s;
+}
+
+.cloud-3::before {
+  width: 180px;
+  height: 180px;
+  top: -80px;
+  left: 60px;
+}
+
+.cloud-3::after {
+  width: 130px;
+  height: 130px;
+  top: -60px;
+  left: 200px;
+}
+
+.cloud-4 {
+  width: 200px;
+  height: 60px;
+  top: 85%;
+  left: -20%;
+  animation: moveClouds 28s linear infinite 25s;
+}
+
+.cloud-4::before {
+  width: 90px;
+  height: 90px;
+  top: -40px;
+  left: 20px;
+}
+
+.cloud-4::after {
+  width: 60px;
+  height: 60px;
+  top: -20px;
+  left: 100px;
+}
+
+@keyframes moveClouds {
+  0% {
+    transform: translateX(-10%);
+  }
+
+  100% {
+    transform: translateX(120vw);
+  }
+}
+
+/* Flying Plane */
+.flying-plane {
+  position: absolute;
+  top: 40%;
+  left: -20%;
+  width: 120px;
+  height: 80px;
+  z-index: 1;
+  animation: flyPlane 35s linear infinite 10s;
+  pointer-events: none;
+  filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes flyPlane {
+  0% {
+    transform: translateX(-15vw) translateY(10vh) scale(0.6) rotate(5deg);
+  }
+
+  50% {
+    transform: translateX(50vw) translateY(0) scale(0.9) rotate(0deg);
+  }
+
+  100% {
+    transform: translateX(115vw) translateY(-15vh) scale(0.5) rotate(-5deg);
+  }
+}

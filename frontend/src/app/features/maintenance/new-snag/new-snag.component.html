@@ -1,0 +1,299 @@
+<div class="px-2 px-md-4 py-4 dark-theme-form" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
+    <div class="mb-4 d-flex justify-content-start align-items-center gap-3">
+        <button class="btn btn-sm"
+            style="background-color: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px;"
+            (click)="onCancel()" title="Back">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <div>
+            <h2 class="fw-bold text-white mb-0 d-flex align-items-center gap-2" style="letter-spacing: 0.1em;">
+                <i class="bi bi-file-earmark-plus text-primary"></i>{{ isEditMode ? 'Edit Case ' +
+                snagForm.get('sequenceNo')?.value : 'Enter new case' }}
+            </h2>
+        </div>
+    </div>
+
+    <div class="card dark-panel-card border-0 mb-4 h-100">
+        <div class="card-body p-4">
+            <form [formGroup]="snagForm">
+                <!-- First Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col">
+                        <label class="form-label detail-label">FFS device:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="ffsDevice">
+                            <option *ngFor="let device of devices" [value]="device.name">{{ device.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Date:</label>
+                        <input type="date" class="form-control form-control-sm custom-dark-input"
+                            formControlName="date">
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Sequence no:</label>
+                        <input type="text" class="form-control form-control-sm custom-dark-input"
+                            formControlName="sequenceNo" readonly>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Status:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="status">
+                            <option *ngFor="let status of statuses" [value]="status.name">{{ status.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">ATA no:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="ataNo">
+                            <option *ngFor="let ata of ataNos" [value]="ata.code + '-' + ata.description">{{ ata.code }}
+                                - {{ ata.description }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Position:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="position">
+                            <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Unit:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="unit">
+                            <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col">
+                        <label class="form-label detail-label">Configuration:</label>
+                        <input type="text" class="form-control form-control-sm custom-dark-input" readonly>
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Tracking no:</label>
+                        <input type="text" class="form-control form-control-sm custom-dark-input">
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Manufacturer ref:</label>
+                        <input type="text" class="form-control form-control-sm custom-dark-input">
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label">Order no:</label>
+                        <input type="text" class="form-control form-control-sm custom-dark-input"
+                            formControlName="orderNo">
+                    </div>
+                    <div class="col">
+                        <label class="form-label detail-label text-warning">Assigned To:</label>
+                        <select class="form-select form-select-sm custom-dark-input" formControlName="assignee">
+                            <option *ngFor="let eng of engineers" [value]="eng">{{ eng }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Third Row (Textareas) -->
+                <div class="row g-4 mb-5 align-items-stretch">
+                    <div class="col-md-6 d-flex flex-column">
+                        <label class="form-label detail-label">Complaint Overview:</label>
+                        <textarea class="form-control custom-dark-input flex-grow-1 p-3" rows="8"
+                            formControlName="complaint" style="resize: none;"
+                            [ngClass]="{'border-danger': snagForm.get('complaint')?.invalid && snagForm.get('complaint')?.touched}"></textarea>
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                        <label class="form-label detail-label d-flex justify-content-between align-items-center mb-2">
+                            <span>Case Action Thread:</span>
+                            <span class="badge bg-secondary rounded-pill" style="font-size: 0.6rem;">{{
+                                actionHistory.length }}</span>
+                        </label>
+                        <div class="custom-dark-input flex-grow-1 p-3 overflow-auto mb-2"
+                            style="height: 15rem; background-color: rgba(15, 23, 42, 0.4) !important;">
+                            <div *ngIf="actionHistory.length === 0"
+                                class="text-secondary small text-center mt-4 pt-4 opacity-50">
+                                <i class="bi bi-chat-square-text d-block fs-3 mb-2"></i>
+                                No actions recorded yet. Break the ice!
+                            </div>
+                            <div *ngFor="let act of actionHistory" class="mb-3 pb-3 border-bottom"
+                                style="border-color: rgba(255,255,255,0.05) !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="text-white fs-7"><i
+                                            class="bi bi-person-circle me-1 text-primary"></i>{{ act.user }}</strong>
+                                    <small class="text-secondary" style="font-size: 0.70rem;">{{ act.date }} &bull; {{
+                                        act.time }}</small>
+                                </div>
+                                <div class="text-light fs-7 ps-3" style="border-left: 1px solid rgba(255,255,255,0.1);">
+                                    {{ act.text }}</div>
+                            </div>
+                        </div>
+                        <div class="input-group mt-auto">
+                            <textarea class="form-control custom-dark-input" rows="2"
+                                placeholder="Add an action to the thread..." [formControl]="newActionControl"
+                                style="resize: none;"></textarea>
+                            <button class="btn btn-outline-info px-4 border" type="button" (click)="addAction()">
+                                <i class="bi bi-send-fill fs-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Info -->
+                <div class="row g-4 align-items-end rounded p-3 me-0 ms-0 border border-darker"
+                    style="background-color: rgba(255,255,255,0.02)">
+                    <div class="col-md-6 border-end border-darker pb-2 pb-md-0">
+                        <label class="form-label detail-label d-block mb-2">Signature (Reporter):</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="text-white fs-7 fw-medium pt-1 d-flex align-items-center w-50">
+                                <i class="bi bi-person-badge text-secondary me-2"></i>
+                                {{ currentUser?.name || 'Engineer' }}
+                            </div>
+                            <div class="form-check m-0">
+                                <input class="form-check-input bg-dark border-secondary" type="checkbox"
+                                    id="enterAction">
+                                <label class="form-check-label text-secondary fs-7 ms-2" for="enterAction">
+                                    Mark Active Action
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row g-2">
+                            <div class="col-3">
+                                <label class="form-label detail-label mb-1">Date:</label>
+                                <div class="text-white fs-7 fw-medium pt-1">{{ currentDateStr }}</div>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label detail-label mb-1">Time:</label>
+                                <div class="text-primary fs-7 fw-bold pt-1">{{ currentTimeStr }}</div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label detail-label mb-1">Signature (Actioning Tech):</label>
+                                <div class="text-white fs-7 fw-medium pt-1 d-flex align-items-center">
+                                    <i class="bi bi-person-badge text-secondary me-2"></i>
+                                    {{ currentUser?.name || 'Engineer' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Buttons -->
+        <div class="card-footer py-3 border-top border-darker d-flex flex-column flex-md-row justify-content-between gap-3 px-4"
+            style="background-color: transparent;">
+
+            <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-sm btn-outline-darker rounded-pill px-3" disabled>Downtime
+                    Log</button>
+                <button type="button" class="btn btn-sm btn-outline-darker rounded-pill px-3" disabled><i
+                        class="bi bi-printer me-1"></i> Print</button>
+                <button type="button" class="btn btn-sm btn-outline-darker rounded-pill px-3" disabled>Material
+                    Req.</button>
+                <button type="button" class="btn btn-sm btn-outline-darker rounded-pill px-3" disabled>Release
+                    Cert.</button>
+                <button type="button" class="btn btn-sm text-secondary ms-md-2"
+                    style="background-color: rgba(255,255,255,0.05); border-radius: 50rem;" (click)="onClear()"><i
+                        class="bi bi-eraser me-1"></i>Clear Form</button>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-darker btn-pill" (click)="onCancel()">Cancel Form</button>
+                <button type="button" class="btn btn-neon-blue btn-pill" (click)="onSave()" [disabled]="isSubmitting">
+                    <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                        aria-hidden="true"></span>
+                    <i class="bi bi-check2-circle me-1" *ngIf="!isSubmitting"></i> {{ isEditMode ? 'Update Case' :
+                    'Submit Case' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Scope styles tightly */
+    .dark-theme-form .dark-panel-card {
+        background-color: #1e2638;
+        border-radius: 1rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark-theme-form .border-darker {
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .dark-theme-form .detail-label {
+        font-size: 0.65rem;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.4rem;
+    }
+
+    .dark-theme-form .tracking-wide {
+        letter-spacing: 0.05em;
+    }
+
+    .dark-theme-form .fs-7 {
+        font-size: 0.8rem;
+    }
+
+    .dark-theme-form .custom-dark-input {
+        background-color: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        border-radius: 0.4rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .dark-theme-form .custom-dark-input:focus {
+        background-color: transparent !important;
+        border-color: #3b82f6;
+        color: #fff;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+    }
+
+    .dark-theme-form .custom-dark-input[readonly] {
+        background-color: transparent !important;
+        opacity: 0.8;
+    }
+
+    .dark-theme-form select.custom-dark-input option {
+        background-color: #1e293b;
+        color: #e2e8f0;
+    }
+
+    .dark-theme-form input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1) opacity(0.6);
+        cursor: pointer;
+    }
+
+    .dark-theme-form .btn-pill {
+        border-radius: 50rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .dark-theme-form .btn-neon-blue {
+        background: linear-gradient(90deg, #4f46e5 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .dark-theme-form .btn-neon-blue:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .dark-theme-form .btn-outline-darker {
+        background-color: transparent;
+        border: 1px solid #334155;
+        color: #94a3b8;
+    }
+
+    .dark-theme-form .btn-outline-darker:hover:not(:disabled) {
+        border-color: #475569;
+        color: #f1f5f9;
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+</style>

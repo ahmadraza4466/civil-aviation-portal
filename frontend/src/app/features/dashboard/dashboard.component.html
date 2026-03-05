@@ -1,0 +1,201 @@
+<div class="row m-0 dashboard-layout">
+    <!-- Main Content Full Width -->
+    <div class="col-12 p-4 p-md-5">
+
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <h6 class="text-secondary text-uppercase tracking-widest fw-bold mb-0" style="font-size: 0.75rem;">Simulator
+                Status Overview</h6>
+
+            <!-- Action Pills -->
+            <div class="d-flex gap-3 mt-3 mt-md-0">
+                <button class="btn btn-outline-darker btn-pill tracking-wide" (click)="exportToPdf()">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Export Report
+                </button>
+                <button class="btn btn-neon-blue btn-pill tracking-wide" routerLink="/app/maintenance/new-snag">
+                    <i class="bi bi-plus-lg me-2"></i>New Snag
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-xl-3 col-md-6">
+                <div class="kpi-card">
+                    <div class="kpi-display text-white">
+                        {{ animatedOpenSnags < 10 ? '0' + animatedOpenSnags : animatedOpenSnags }} </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary tracking-wide kpi-label text-uppercase"
+                                    style="font-size: 0.65rem; font-weight: 600;">Open Snags</span>
+                                <i class="bi bi-tools text-danger fs-5 opacity-75"></i>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="kpi-card kpi-blue-gradient">
+                        <div class="kpi-display text-white">
+                            {{ animatedPendingMaint < 10 ? '0' + animatedPendingMaint : animatedPendingMaint }} </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-white kpi-label tracking-wide text-uppercase"
+                                        style="font-size: 0.65rem; font-weight: 600;">Pending Maint</span>
+                                    <i class="bi bi-clock-history text-white fs-5 opacity-75"></i>
+                                </div>
+                                <!-- Decorative bottom right shape simulation -->
+                                <div
+                                    style="position: absolute; bottom: -20px; right: -15px; font-size: 7rem; color: rgba(255,255,255,0.05); line-height: 1;">
+                                    <i class="bi bi-gear-fill"></i>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="kpi-display neon-green">
+                                {{ uptimePercentage }}<span style="font-size: 1.5rem;">%</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary tracking-wide kpi-label text-uppercase"
+                                    style="font-size: 0.65rem; font-weight: 600;">Sim Uptime</span>
+                                <i class="bi bi-activity text-success fs-5 opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="kpi-display neon-orange">
+                                04
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary tracking-wide kpi-label text-uppercase"
+                                    style="font-size: 0.65rem; font-weight: 600;">Active Sessions</span>
+                                <i class="bi bi-play-circle text-warning fs-5 opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row g-4 mb-5">
+                    <!-- Pie Chart: Status Distribution -->
+                    <div class="col-lg-5">
+                        <div class="card dark-panel-card border-0 p-4 h-100">
+                            <h6 class="text-secondary text-uppercase tracking-widest fw-bold mb-4"
+                                style="font-size: 0.75rem;">Status Distribution</h6>
+                            <div style="height: 250px; position: relative;">
+                                <canvas #pieChart></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bar Chart: Monthly Analytics -->
+                    <div class="col-lg-7">
+                        <div class="card dark-panel-card border-0 p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h6 class="text-secondary text-uppercase tracking-widest fw-bold mb-0"
+                                    style="font-size: 0.75rem;">Monthly Maintenance Volume</h6>
+                            </div>
+                            <div style="height: 250px; position: relative;">
+                                <canvas #barChart></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table Registry -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card dark-panel-card border-0 p-4">
+
+                            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 border-bottom pb-4 mb-3"
+                                style="border-color: rgba(255,255,255,0.05) !important;">
+                                <h6 class="text-white text-uppercase tracking-widest fw-bold mb-0 text-nowrap"
+                                    style="font-size: 0.75rem;">
+                                    <i class="bi bi-list-task text-primary me-2"></i>Recent Snag Registry
+                                </h6>
+
+                                <!-- Filters with transparent/dark styling -->
+                                <form [formGroup]="filterForm"
+                                    class="d-flex flex-wrap gap-3 justify-content-md-end align-items-center">
+
+                                    <div style="width: 180px;">
+                                        <select class="form-select custom-dark-input shadow-none"
+                                            formControlName="device" style="font-size: 0.85rem;">
+                                            <option [ngValue]="null">Filter by Device</option>
+                                            <option *ngFor="let d of devices" [value]="d.name">{{ d.name }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="width: 180px;">
+                                        <select class="form-select custom-dark-input shadow-none" formControlName="ata"
+                                            style="font-size: 0.85rem;">
+                                            <option [ngValue]="null">Filter by ATA</option>
+                                            <option *ngFor="let code of ataCodes" [value]="code">{{ code }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="width: 160px;">
+                                        <input type="date" formControlName="date"
+                                            class="form-control custom-dark-input shadow-none"
+                                            style="font-size: 0.85rem;" placeholder="Date">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Table injects classes via global table-dark or customized CSS scope -->
+                            <div class="table-responsive">
+                                <table class="table table-hover table-dark-custom mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th *ngFor="let col of tableColumns">{{ col.header }}</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of filteredCases">
+                                            <td *ngFor="let col of tableColumns">
+                                                <ng-container *ngIf="col.key === 'status'">
+                                                    <div class="progress"
+                                                        style="height: 1.25rem; background-color: rgba(255,255,255,0.05); border-radius: 50rem; border: 1px solid rgba(255,255,255,0.1); width: 100px; position: relative; overflow: hidden;">
+                                                        <div class="progress-bar progress-bar-striped progress-bar-animated fw-bold d-flex align-items-center justify-content-center text-white"
+                                                            role="progressbar" [ngClass]="getBadgeClass(item.status)"
+                                                            [style.width]="getProgressBarWidth(item.status)"
+                                                            style="font-size: 0.65rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); transition: width 0.6s ease;">
+                                                            <span class="position-absolute w-100 text-center"
+                                                                style="z-index: 2; left: 0;">{{ item.status | uppercase
+                                                                }}</span>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="col.key !== 'status'">
+                                                    {{ item[col.key] }}
+                                                </ng-container>
+                                            </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-info me-2 border-0"
+                                                    (click)="onEdit(item)" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger border-0"
+                                                    (click)="onDelete(item)" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="filteredCases.length === 0">
+                                            <td [attr.colspan]="tableColumns.length + 1"
+                                                class="text-center py-4 text-secondary">
+                                                No snag cases found matching your criteria.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
