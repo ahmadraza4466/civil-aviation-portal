@@ -1,0 +1,202 @@
+<div class="px-2 px-md-4 py-4 dark-theme-form" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
+    <div class="mb-4 d-flex justify-content-start align-items-center gap-3">
+        <button class="btn btn-sm"
+            style="background-color: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px;"
+            (click)="onCancel()" title="Back">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <div>
+            <h2 class="fw-bold text-white mb-0 d-flex align-items-center gap-2" style="letter-spacing: 0.1em;">
+                Simulator Time Log
+            </h2>
+            <small class="text-secondary">A220-100/300 (LV.FSTD.04 / 05 / 07)</small>
+        </div>
+    </div>
+
+    <div class="card dark-panel-card border-0 mb-4 h-100 p-4">
+        <div class="card-body p-2">
+            <form [formGroup]="logForm">
+                <div class="row g-5">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Company / Customer: <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm custom-dark-input"
+                                formControlName="companyCustomer"
+                                [ngClass]="{'border-danger': logForm.get('companyCustomer')?.invalid && logForm.get('companyCustomer')?.touched}">
+                        </div>
+                        <div class="mb-3"><label class="form-label detail-label">Instructor:</label><input type="text"
+                                class="form-control form-control-sm custom-dark-input" formControlName="instructor">
+                        </div>
+                        <div class="mb-3"><label class="form-label detail-label">Pilot #1:</label><input type="text"
+                                class="form-control form-control-sm custom-dark-input" formControlName="pilot1"></div>
+                        <div class="mb-4"><label class="form-label detail-label">Pilot #2:</label><input type="text"
+                                class="form-control form-control-sm custom-dark-input" formControlName="pilot2"></div>
+                        <div class="mb-3"><label class="form-label detail-label">Observer #1:</label><input type="text"
+                                class="form-control form-control-sm custom-dark-input" formControlName="observer1">
+                        </div>
+                        <div class="mb-4"><label class="form-label detail-label">Observer #2:</label><input type="text"
+                                class="form-control form-control-sm custom-dark-input" formControlName="observer2">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label detail-label d-block text-white">Configuration / Registration:
+                                <span class="text-danger">*</span></label>
+                            <div class="form-check" *ngFor="let m of configurations">
+                                <input class="form-check-input" type="radio" [value]="m" formControlName="configuration"
+                                    [id]="m">
+                                <label class="form-check-label text-light fs-7 ms-2" [for]="m">{{ m }}</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label detail-label d-block text-white">Simulator used as: <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-check" *ngFor="let sua of simUsedAsOpts">
+                                <input class="form-check-input" type="radio" [value]="sua"
+                                    formControlName="simulatorUsedAs" [id]="sua">
+                                <label class="form-check-label text-light fs-7 ms-2" [for]="sua">{{ sua }}</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label detail-label d-block text-white">Timelog submit to:</label>
+                            <div class="form-check" *ngFor="let opt of submitToOpts; let i = index"
+                                formArrayName="submitTo">
+                                <input class="form-check-input" type="checkbox" [formControlName]="i" [id]="'st'+i">
+                                <label class="form-check-label text-light fs-7 ms-2" [for]="'st'+i">{{ opt }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Start Time: <span
+                                    class="text-danger">*</span></label>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="startHour">
+                                    <option *ngFor="let h of hours" [value]="h">{{h}}</option>
+                                </select> <span class="text-white pt-1">:</span>
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="startMinute">
+                                    <option *ngFor="let m of minutes" [value]="m">{{m}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label detail-label">End Time: <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="endHour">
+                                    <option *ngFor="let h of hours" [value]="h">{{h}}</option>
+                                </select> <span class="text-white pt-1">:</span>
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="endMinute">
+                                    <option *ngFor="let m of minutes" [value]="m">{{m}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Time Lost:</label>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="lostHour">
+                                    <option *ngFor="let h of hours" [value]="h">{{h}}</option>
+                                </select> <span class="text-white pt-1">:</span>
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="lostMinute">
+                                    <option *ngFor="let m of minutes" [value]="m">{{m}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label detail-label">Total Training Time: <span
+                                    class="text-danger">*</span></label>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="totalHour">
+                                    <option *ngFor="let h of hours" [value]="h">{{h}}</option>
+                                </select> <span class="text-white pt-1">:</span>
+                                <select class="form-select form-select-sm custom-dark-input" style="width: 80px;"
+                                    formControlName="totalMinute">
+                                    <option *ngFor="let m of minutes" [value]="m">{{m}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Extra Form Fields -->
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Quality Level (1-5): <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm custom-dark-input w-50"
+                                formControlName="qualityLevel">
+                                <option *ngFor="let ql of qualityOpts" [value]="ql">{{ql}}</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Comment / Complaint(s):</label>
+                            <textarea class="form-control custom-dark-input" rows="4" formControlName="comment"
+                                [ngClass]="{'border-danger': logForm.get('comment')?.invalid && logForm.get('comment')?.touched}"></textarea>
+                            <small class="text-secondary">Required if Quality < 5</small>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label detail-label">Engineer on Duty:</label>
+                            <input type="text" class="form-control form-control-sm custom-dark-input"
+                                formControlName="engineerOnDuty">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label detail-label">Customer Email:</label>
+                            <input type="email" class="form-control form-control-sm custom-dark-input"
+                                formControlName="customerEmail"
+                                [ngClass]="{'border-danger': logForm.get('customerEmail')?.invalid && logForm.get('customerEmail')?.touched}">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary my-4">
+
+                <div class="row w-100">
+                    <div class="col-12 py-2">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="conf1" formControlName="confirmed1">
+                            <label class="form-check-label text-light fs-7 ms-2" for="conf1">I confirm that all details
+                                provided are true and accurate.</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="conf2" formControlName="confirmed2">
+                            <label class="form-check-label text-light fs-7 ms-2" for="conf2">I understand this log
+                                counts towards the total monthly operation.</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 py-3 rounded mb-3"
+                        style="background-color: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2);">
+                        <div class="form-check m-0 d-flex align-items-center">
+                            <input class="form-check-input mt-0 shadow-sm" style="width: 1.25rem; height: 1.25rem;"
+                                type="checkbox" id="incSnag" formControlName="includeInSnag">
+                            <label class="form-check-label text-white fw-bold fs-6 ms-3" for="incSnag">Include in Snag
+                                Listing</label>
+                        </div>
+                        <div class="ms-4 ps-2 mt-1">
+                            <small class="text-secondary">If checked, the same Time Log record will also appear in the
+                                existing Snag listing module.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 mt-2">
+                    <button type="button" class="btn btn-outline-darker btn-pill" (click)="onCancel()">Cancel
+                        Form</button>
+                    <button type="button" class="btn btn-neon-blue btn-pill" (click)="onSave()"
+                        [disabled]="isSubmitting">
+                        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                        <i class="bi bi-check2-circle me-1" *ngIf="!isSubmitting"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

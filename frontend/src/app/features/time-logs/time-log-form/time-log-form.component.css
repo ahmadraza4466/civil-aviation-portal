@@ -1,0 +1,80 @@
+.dark-theme-form .dark-panel-card {
+    background-color: #1e2638;
+    border-radius: 1rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme-form .detail-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+}
+
+.dark-theme-form .fs-7 {
+    font-size: 0.8rem;
+}
+
+.dark-theme-form .custom-dark-input {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    border-radius: 0.4rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme-form .custom-dark-input:focus {
+    background-color: transparent !important;
+    border-color: #3b82f6;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+.dark-theme-form select.custom-dark-input option {
+    background-color: #1e293b;
+    color: #e2e8f0;
+}
+
+.dark-theme-form .btn-pill {
+    border-radius: 50rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.dark-theme-form .btn-neon-blue {
+    background: linear-gradient(90deg, #4f46e5 0%, #3b82f6 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.dark-theme-form .btn-neon-blue:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.dark-theme-form .btn-outline-darker {
+    background-color: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+}
+
+.dark-theme-form .btn-outline-darker:hover:not(:disabled) {
+    border-color: #475569;
+    color: #f1f5f9;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.form-check-input {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}

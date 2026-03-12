@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiBaseUrl: 'https://civil-aviation-portal.onrender.com/api/v1',
+    apiBaseUrl: 'http://localhost:3000/api/v1',
     appName: 'CIVIL AVIATION PORTAL'
 };

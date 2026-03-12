@@ -48,7 +48,11 @@ export class CaseListComponent implements OnInit {
   }
 
   onEdit(item: any) {
-    this.router.navigate(['/app/maintenance/new-snag'], { queryParams: { id: item.id } });
+    if (item.isTimeLog) {
+      this.router.navigate(['/app/logbook/time-logs/edit'], { queryParams: { id: item.id } });
+    } else {
+      this.router.navigate(['/app/maintenance/new-snag'], { queryParams: { id: item.id } });
+    }
   }
 
   onDelete(item: any) {

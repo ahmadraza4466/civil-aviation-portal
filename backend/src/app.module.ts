@@ -7,6 +7,7 @@ import { DevicesModule } from './modules/devices/devices.module';
 import { CasesModule } from './modules/cases/cases.module';
 import { PartsModule } from './modules/parts/parts.module';
 import { LogbookModule } from './modules/logbook/logbook.module';
+import { TimeLogsModule } from './modules/time-logs/time-logs.module';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 @Module({
@@ -31,6 +32,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
     CasesModule,
     PartsModule,
     LogbookModule,
+    TimeLogsModule,
   ],
 })
 export class AppModule { }

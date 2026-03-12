@@ -41,6 +41,18 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/logbook/dr-issue-tracker/dr-issue-tracker.component').then(c => c.DrIssueTrackerComponent)
             },
             {
+                path: 'logbook/time-logs',
+                loadComponent: () => import('./features/time-logs/time-log-list/time-log-list.component').then(c => c.TimeLogListComponent)
+            },
+            {
+                path: 'logbook/time-logs/new',
+                loadComponent: () => import('./features/time-logs/time-log-form/time-log-form.component').then(c => c.TimeLogFormComponent)
+            },
+            {
+                path: 'logbook/time-logs/edit',
+                loadComponent: () => import('./features/time-logs/time-log-form/time-log-form.component').then(c => c.TimeLogFormComponent)
+            },
+            {
                 path: 'reporting',
                 loadComponent: () => import('./features/reporting/reporting.component').then(c => c.ReportingComponent)
             }
