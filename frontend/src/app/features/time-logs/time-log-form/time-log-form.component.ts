@@ -134,7 +134,7 @@ export class TimeLogFormComponent implements OnInit {
             configuration: v.configuration,
             simulatorUsedAs: v.simulatorUsedAs,
             timelogSubmitTo: selectedSubmitTo,
-            qualityLevel: v.qualityLevel,
+            qualityLevel: v.qualityLevel ? Number(v.qualityLevel) : undefined,
             comment: v.comment,
             engineerOnDuty: v.engineerOnDuty,
             customerEmail: v.customerEmail,
