@@ -11,6 +11,6 @@ import { ThemeService } from './core/services/theme.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'air-sim-maintenance-portal';
+  title = 'avio-training-management-system';
   private themeService = inject(ThemeService);
 }

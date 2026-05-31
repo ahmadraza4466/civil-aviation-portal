@@ -37,6 +37,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/logbook/shift-diary/shift-diary.component').then(c => c.ShiftDiaryComponent)
             },
             {
+                path: 'logbook/shifts',
+                loadComponent: () => import('./features/logbook/shift-schedule/shift-schedule.component').then(c => c.ShiftScheduleComponent)
+            },
+            {
                 path: 'logbook/dr-issue-tracker',
                 loadComponent: () => import('./features/logbook/dr-issue-tracker/dr-issue-tracker.component').then(c => c.DrIssueTrackerComponent)
             },

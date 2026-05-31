@@ -110,7 +110,7 @@ export class ReportingComponent {
         doc.rect(14, 15, 10, 10, 'F');
         doc.setFontSize(22);
         doc.setTextColor(13, 50, 77);
-        doc.text('CIVIL AVIATION PORTAL', 28, 23);
+        doc.text('Avio Training Management System', 28, 23);
 
         doc.setFontSize(16);
         doc.setTextColor(100);
@@ -186,7 +186,7 @@ export class ReportingComponent {
                 children: [
                     new Paragraph({
                         children: [
-                            new TextRun({ text: "CIVIL AVIATION PORTAL", bold: true, size: 48 }),
+                            new TextRun({ text: "Avio Training Management System", bold: true, size: 48 }),
                         ],
                     }),
                     new Paragraph({

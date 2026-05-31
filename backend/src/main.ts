@@ -15,8 +15,8 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
 
   const config = new DocumentBuilder()
-    .setTitle('CIVIL AVIATION PORTAL API')
-    .setDescription('The backend API for the Civil Aviation Maintenance Portal.')
+    .setTitle('Avio Training Management System API')
+    .setDescription('The backend API for the Avio Training Management System.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

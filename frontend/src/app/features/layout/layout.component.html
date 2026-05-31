@@ -5,7 +5,7 @@
     <div class="shadow-sm" id="sidebar-wrapper">
         <div class="sidebar-heading d-flex align-items-center justify-content-center fw-bold text-start py-4">
             <i class="bi bi-airplane-engines fs-3 text-info sidebar-logo-icon"></i>
-            <span class="ms-2 fs-5 tracking-wide sidebar-text">CAP OPS</span>
+            <span class="ms-2 fs-5 tracking-wide sidebar-text">AVIO TRAINING</span>
         </div>
         <div class="list-group list-group-flush mt-2 border-0 px-3 pb-5">
             <div class="sidebar-label mt-3 mb-2 px-3 text-uppercase fw-bold"
@@ -91,6 +91,12 @@
                     <span class="submenu-bullet me-3"></span>
                     <span class="fw-medium sidebar-text">Shift Diary</span>
                 </a>
+                <a routerLink="/app/logbook/shifts" routerLinkActive="active"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                    (click)="closeSidebarOnMobile()">
+                    <span class="submenu-bullet me-3"></span>
+                    <span class="fw-medium sidebar-text">Engineers Shifts</span>
+                </a>
                 <a routerLink="/app/logbook/dr-issue-tracker" routerLinkActive="active"
                     class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
                     (click)="closeSidebarOnMobile()">
@@ -134,9 +140,8 @@
                 </button>
                 <div class="d-none d-md-block">
                     <span class="navbar-brand mb-0 h5 text-white fw-bold d-block"
-                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">CIVIL AVIATION
-                        PORTAL</span>
-                    <small class="text-secondary" style="font-size: 0.75rem;">Enterprise Maintenance & Logistics</small>
+                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Avio Training Management System</span>
+                    <small class="text-secondary" style="font-size: 0.75rem;">Engineers Training & Shift Management</small>
                 </div>
             </div>
 

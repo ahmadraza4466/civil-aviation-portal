@@ -43,7 +43,7 @@ export class LoginComponent {
                     Swal.fire({
                         icon: 'success',
                         title: 'Login Successful',
-                        text: 'Welcome to CIVIL AVIATION PORTAL',
+                        text: 'Welcome to Avio Training Management System',
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
