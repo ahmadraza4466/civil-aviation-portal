@@ -3,5 +3,5 @@ export class CreateUserDto {
   @IsEmail() email: string;
   @IsString() @MinLength(6) password: string;
   @IsString() name: string;
-  @IsEnum(['admin', 'engineer']) role: string;
+  @IsEnum(['admin', 'engineer', 'instructor']) role: string;
 }

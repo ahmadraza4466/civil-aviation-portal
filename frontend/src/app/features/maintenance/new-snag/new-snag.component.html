@@ -1,15 +1,19 @@
-<div class="px-2 px-md-4 py-4 dark-theme-form" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
-    <div class="mb-4 d-flex justify-content-start align-items-center gap-3">
-        <button class="btn btn-sm"
-            style="background-color: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px;"
-            (click)="onCancel()" title="Back">
-            <i class="bi bi-arrow-left"></i>
-        </button>
+<div class="av-page dark-theme-form" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
+
+    <!-- Page Header -->
+    <div class="page-header">
         <div>
-            <h2 class="fw-bold text-white mb-0 d-flex align-items-center gap-2" style="letter-spacing: 0.1em;">
-                <i class="bi bi-file-earmark-plus text-primary"></i>{{ isEditMode ? 'Edit Case ' +
-                snagForm.get('sequenceNo')?.value : 'Enter new case' }}
-            </h2>
+            <div class="page-eyebrow">Defect Management</div>
+            <h1 class="page-title">
+                <i class="bi bi-file-earmark-plus"></i>
+                {{ isEditMode ? 'Edit Case ' + snagForm.get('sequenceNo')?.value : 'Enter New Case' }}
+            </h1>
+            <p class="page-subtitle">{{ isEditMode ? 'Update existing defect case details' : 'Record a new simulator defect or snag' }}</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-outline-darker btn-pill" (click)="onCancel()">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </button>
         </div>
     </div>
 

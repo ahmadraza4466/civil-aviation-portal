@@ -22,8 +22,12 @@ export class CaseListComponent implements OnInit {
     { key: 'date', header: 'Date' },
     { key: 'sequenceNo', header: 'Sequence No' },
     { key: 'ataNo', header: 'ATA No' },
+    { key: 'complaint', header: 'Complaint Overview', type: 'truncate' },
     { key: 'status', header: 'Status' }
   ];
+
+  deviceOptions = ['Airbus # 1', 'Airbus # 2', 'DA Part #', 'Door Trainer', 'MPCT'];
+  selectedDevice = '';
 
   totalCases = 0;
   openCasesCount = 0;
@@ -32,9 +36,20 @@ export class CaseListComponent implements OnInit {
   ngOnInit() {
     this.casesService.cases$.subscribe(data => {
       this.cases = data;
-      this.filteredCases = [...this.cases];
+      this.applyDeviceFilter();
       this.updateSummary();
     });
+  }
+
+  filterByDevice(device: string) {
+    this.selectedDevice = device;
+    this.applyDeviceFilter();
+  }
+
+  private applyDeviceFilter() {
+    this.filteredCases = this.selectedDevice
+      ? this.cases.filter(c => c.ffsDevice === this.selectedDevice)
+      : [...this.cases];
   }
 
   updateSummary() {

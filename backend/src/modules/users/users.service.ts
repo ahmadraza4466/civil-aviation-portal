@@ -24,6 +24,19 @@ export class UsersService implements OnModuleInit {
       console.log('✅ Seeded default test user: test@gmail.com / 123456');
     }
 
+    const instructorEmail = 'instructor@gmail.com';
+    const instructorExists = await this.userModel.findOne({ email: instructorEmail });
+    if (!instructorExists) {
+      const passwordHash = await bcrypt.hash('123456', 10);
+      await new this.userModel({
+        email: instructorEmail,
+        passwordHash,
+        name: 'Instructor User',
+        role: 'instructor'
+      }).save();
+      console.log('✅ Seeded instructor user: instructor@gmail.com / 123456');
+    }
+
     const assignees = [
       { email: 'engineera@example.com', name: 'Engineer A', role: 'engineer' },
       { email: 'engineerb@example.com', name: 'Engineer B', role: 'engineer' },
@@ -57,6 +70,16 @@ export class UsersService implements OnModuleInit {
   async findAll() { return this.userModel.find().select('-passwordHash'); }
   async findOne(id: string) {
     const user = await this.userModel.findById(id).select('-passwordHash');
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+  async updateUser(id: string, dto: { role?: string; name?: string; email?: string; password?: string }) {
+    const update: any = {};
+    if (dto.role !== undefined) update.role = dto.role;
+    if (dto.name !== undefined) update.name = dto.name;
+    if (dto.email !== undefined) update.email = dto.email;
+    if (dto.password !== undefined && dto.password !== '') update.passwordHash = await bcrypt.hash(dto.password, 10);
+    const user = await this.userModel.findByIdAndUpdate(id, { $set: update }, { new: true }).select('-passwordHash');
     if (!user) throw new NotFoundException('User not found');
     return user;
   }

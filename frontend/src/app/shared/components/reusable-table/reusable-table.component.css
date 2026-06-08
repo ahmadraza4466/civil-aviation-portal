@@ -1,0 +1,51 @@
+.truncate-cell {
+    display: block;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.pagination-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #f1f5f9;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-label {
+    background-color: rgba(255, 255, 255, 0.02);
+    color: #64748b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: default;
+    pointer-events: none;
+}
+
+:host-context(body.light-theme) .pagination-btn {
+    background-color: #f1f5f9;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+
+:host-context(body.light-theme) .pagination-btn:hover:not(:disabled) {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
+:host-context(body.light-theme) .pagination-label {
+    background-color: #ffffff;
+    color: #94a3b8;
+    border-color: #e2e8f0;
+}

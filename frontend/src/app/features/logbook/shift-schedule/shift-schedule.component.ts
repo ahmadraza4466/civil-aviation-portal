@@ -13,90 +13,117 @@ import { throwError } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   template: `
-    <div class="shift-page">
+    <div class="av-page">
+
       <!-- Page Header -->
       <div class="page-header">
         <div>
-          <div class="eyebrow">Avio Training Management System</div>
-          <h1>
-            <i class="bi bi-calendar3"></i>
-            Engineers Shift Schedule
-          </h1>
-          <p>Monthly team shift planning, working hours, and vacation tracking</p>
+          <div class="page-eyebrow">Operations</div>
+          <h1 class="page-title"><i class="bi bi-calendar3"></i>Engineers Shift Schedule</h1>
+          <p class="page-subtitle">Monthly team shift planning, working hours, and vacation tracking</p>
         </div>
 
-        <div class="header-actions">
-          <button class="btn-soft" type="button" (click)="setCurrentMonth()">Today</button>
-          <button class="btn-icon" type="button" (click)="prevMonth()">
+        <div class="page-header-actions">
+          <button class="btn btn-outline-darker btn-pill" type="button" (click)="setCurrentMonth()">Today</button>
+          <button class="sc-icon-btn" type="button" (click)="prevMonth()">
             <i class="bi bi-chevron-left"></i>
           </button>
-          <button class="btn-icon" type="button" (click)="nextMonth()">
+          <button class="sc-icon-btn" type="button" (click)="nextMonth()">
             <i class="bi bi-chevron-right"></i>
           </button>
           <div class="month-pill">{{ getMonthName() }} {{ selectedYear }}</div>
-          <button class="btn-primary-av" type="button" (click)="openAddModal()">
-            <i class="bi bi-plus-lg"></i>
-            Add Shift
+
+          <!-- Engineer filter dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-outline-darker btn-pill dropdown-toggle" type="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-funnel me-1"></i>{{ getSelectedEngineerName() }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end sc-dropdown-menu">
+              <li>
+                <a class="dropdown-item text-secondary py-2" href="javascript:void(0)"
+                  (click)="selectEngineer('')">
+                  <i class="bi bi-people me-2 opacity-50"></i>All Engineers
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1" style="border-color: rgba(255,255,255,0.08);"></li>
+              <li *ngFor="let eng of engineers">
+                <a class="dropdown-item py-2"
+                  [class.text-info]="filterEngineerId === eng._id"
+                  [class.text-light]="filterEngineerId !== eng._id"
+                  href="javascript:void(0)" (click)="selectEngineer(eng._id)">
+                  <i class="bi bi-check2 me-2"
+                    [style.visibility]="filterEngineerId === eng._id ? 'visible' : 'hidden'"></i>{{ eng.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <button class="btn btn-neon-blue btn-pill" type="button" (click)="openAddModal()">
+            <i class="bi bi-plus-lg me-1"></i>Add Shift
           </button>
         </div>
       </div>
 
-      <!-- Toolbar -->
-      <div class="toolbar-card">
-        <div class="filter-box">
-          <i class="bi bi-funnel"></i>
-          <select [(ngModel)]="filterEngineerId" (change)="loadShifts()">
-            <option value="">All Engineers</option>
-            <option *ngFor="let eng of engineers" [value]="eng._id">{{ eng.name }}</option>
-          </select>
-        </div>
-
-        <div class="toolbar-note">
-          <i class="bi bi-info-circle"></i>
-          Double-click empty cell to assign shift. Click existing shift to edit.
-        </div>
-      </div>
-
-      <!-- Summary Cards -->
-      <div class="summary-grid">
-        <div class="summary-card">
-          <span class="label">Month Hours</span>
-          <strong>{{ totalScheduledHours }}</strong>
-          <small>Total scheduled hours</small>
-        </div>
-
-        <div class="summary-card">
-          <span class="label">People Scheduled</span>
-          <strong>{{ peopleCount }}</strong>
-          <small>Engineers with shifts</small>
-        </div>
-
-        <div class="summary-card">
-          <span class="label">Total Shifts</span>
-          <strong>{{ totalShiftCount }}</strong>
-          <small>Working shift entries</small>
-        </div>
-
-        <div class="summary-card">
-          <span class="label">Vacation Days</span>
-          <strong>{{ vacationDaysCount }}</strong>
-          <small>Annual paid vacation</small>
-        </div>
-      </div>
-
-      <!-- Schedule -->
-      <div class="schedule-card">
-        <div class="schedule-titlebar">
-          <div>
-            <h2>AVIO ENGINEERS SHIFT SCHEDULE</h2>
-            <span>{{ getFilteredEngineers().length }} Members · {{ getMonthName() }} {{ selectedYear }}</span>
+      <!-- Stats -->
+      <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Month Hours</span>
+            <div class="sc-stat-icon" style="background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.2);">
+              <i class="bi bi-clock-fill" style="color:#06b6d4;"></i>
+            </div>
           </div>
+          <strong class="stat-value" style="color:#06b6d4;">{{ totalScheduledHours }}</strong>
+          <small class="stat-sub">Total scheduled hours</small>
+        </div>
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">People Scheduled</span>
+            <div class="sc-stat-icon" style="background:rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.2);">
+              <i class="bi bi-people-fill" style="color:#4f46e5;"></i>
+            </div>
+          </div>
+          <strong class="stat-value" style="color:#4f46e5;">{{ peopleCount }}</strong>
+          <small class="stat-sub">Engineers with shifts</small>
+        </div>
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Total Shifts</span>
+            <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
+              <i class="bi bi-calendar-check-fill" style="color:#3b82f6;"></i>
+            </div>
+          </div>
+          <strong class="stat-value" style="color:#3b82f6;">{{ totalShiftCount }}</strong>
+          <small class="stat-sub">Working shift entries</small>
+        </div>
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Vacation Days</span>
+            <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
+              <i class="bi bi-umbrella-fill" style="color:#f59e0b;"></i>
+            </div>
+          </div>
+          <strong class="stat-value" style="color:#f59e0b;">{{ vacationDaysCount }}</strong>
+          <small class="stat-sub">Annual paid vacation</small>
+        </div>
+      </div>
 
-          <div class="legend">
-            <span><i class="dot morning"></i> Morning</span>
-            <span><i class="dot evening"></i> Evening</span>
-            <span><i class="dot night"></i> Night</span>
-            <span><i class="dot vacation"></i> Vacation</span>
+      <!-- Schedule Card -->
+      <div class="content-card">
+        <div class="content-card-header">
+          <div>
+            <h6 class="content-card-title">AVIO ENGINEERS SHIFT SCHEDULE</h6>
+            <span class="sc-sub-text">{{ getFilteredEngineers().length }} Members &middot; {{ getMonthName() }} {{ selectedYear }}</span>
+          </div>
+          <div class="sc-card-header-right">
+            <div class="legend">
+              <span><i class="dot morning"></i>Morning</span>
+              <span><i class="dot evening"></i>Evening</span>
+              <span><i class="dot night"></i>Night</span>
+              <span><i class="dot vacation"></i>Vacation</span>
+            </div>
+            <small class="sc-tip">Double-click cell to assign &middot; Click shift to edit</small>
           </div>
         </div>
 
@@ -112,7 +139,6 @@ import { throwError } from 'rxjs';
                 <th class="engineer-head">
                   <div>Engineers</div>
                 </th>
-
                 <th
                   *ngFor="let day of days"
                   [class.weekend-head]="isWeekend(day.dateString)"
@@ -128,7 +154,6 @@ import { throwError } from 'rxjs';
                   <div>Daily hours</div>
                   <div>People</div>
                 </td>
-
                 <td
                   *ngFor="let day of days"
                   [class.weekend-cell]="isWeekend(day.dateString)"
@@ -153,7 +178,6 @@ import { throwError } from 'rxjs';
                 </td>
 
                 <ng-container *ngFor="let cell of engineerCellsMap[eng._id] || []">
-                  <!-- Vacation -->
                   <td
                     *ngIf="cell.type === 'Vacation'"
                     [attr.colspan]="cell.span"
@@ -161,11 +185,10 @@ import { throwError } from 'rxjs';
                   >
                     <div class="vacation-bar" (click)="openEditModal(cell.shift)">
                       <strong>Annual Paid Vacation</strong>
-                      <span>{{ cell.shift?.startDate }} → {{ cell.shift?.endDate }}</span>
+                      <span>{{ cell.shift?.startDate }} &rarr; {{ cell.shift?.endDate }}</span>
                     </div>
                   </td>
 
-                  <!-- Shift -->
                   <td
                     *ngIf="cell.type === 'Shift'"
                     class="schedule-cell"
@@ -181,7 +204,6 @@ import { throwError } from 'rxjs';
                     </div>
                   </td>
 
-                  <!-- Empty -->
                   <td
                     *ngIf="cell.type === 'Empty'"
                     class="schedule-cell empty-cell"
@@ -206,7 +228,7 @@ import { throwError } from 'rxjs';
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- Add/Edit Modal -->
       <div *ngIf="isModalOpen" class="modal-backdrop-custom">
         <div class="modal-card">
           <div class="modal-header-custom">
@@ -214,7 +236,7 @@ import { throwError } from 'rxjs';
               <h3>{{ isEditing ? 'Edit Shift' : 'Schedule New Shift' }}</h3>
               <p>{{ isEditing ? 'Update engineer shift details' : 'Assign a new shift to engineer' }}</p>
             </div>
-            <button type="button" class="modal-close" (click)="closeModal()">×</button>
+            <button type="button" class="modal-close" (click)="closeModal()">&times;</button>
           </div>
 
           <form [formGroup]="shiftForm" (ngSubmit)="saveShift()">
@@ -243,7 +265,6 @@ import { throwError } from 'rxjs';
                   <label>Start Date</label>
                   <input type="date" formControlName="startDate" />
                 </div>
-
                 <div class="form-group">
                   <label>End Date</label>
                   <input type="date" formControlName="endDate" />
@@ -255,7 +276,6 @@ import { throwError } from 'rxjs';
                   <label>Start Time</label>
                   <input type="time" formControlName="startTime" />
                 </div>
-
                 <div class="form-group">
                   <label>End Time</label>
                   <input type="time" formControlName="endTime" />
@@ -274,147 +294,99 @@ import { throwError } from 'rxjs';
             </div>
 
             <div class="modal-footer-custom">
-              <button type="button" class="btn-danger-soft" *ngIf="isEditing" (click)="deleteShift()">
-                <i class="bi bi-trash"></i>
-                Delete
+              <button type="button" class="btn btn-danger btn-sm rounded-pill px-3" *ngIf="isEditing" (click)="deleteShift()">
+                <i class="bi bi-trash me-1"></i>Delete
               </button>
-
               <div class="modal-footer-right">
-                <button type="button" class="btn-soft" (click)="closeModal()">Cancel</button>
-                <button type="submit" class="btn-primary-av">Save Shift</button>
+                <button type="button" class="btn btn-outline-darker btn-pill" (click)="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-neon-blue btn-pill">Save Shift</button>
               </div>
             </div>
           </form>
         </div>
       </div>
+
     </div>
   `,
   styles: [`
     :host {
       display: block;
-      background: #f8fafc;
+      color: #f8fafc;
+
+      /* Table-level CSS variables — dark default */
+      --card-bg: #1e2638;
+      --card-border: rgba(255, 255, 255, 0.05);
+      --title-color: #ffffff;
+      --sub-text: #94a3b8;
+      --table-header-bg: #0f172a;
+      --table-header-border: rgba(255, 255, 255, 0.08);
+      --daily-bg: #15192b;
+      --cell-bg: #1e2638;
+      --cell-border: rgba(255, 255, 255, 0.05);
+      --cell-weekend-bg: #15192b;
+      --cell-today-bg: rgba(2, 132, 199, 0.15);
+      --cell-today-border: rgba(14, 165, 233, 0.5);
+      --modal-backdrop: rgba(15, 23, 42, 0.8);
+      --modal-bg: #1e2638;
+      --modal-header-bg: #15192b;
+      --input-bg: rgba(15, 23, 42, 0.4);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --input-color: #e2e8f0;
+      --empty-cell-btn-color: rgba(255, 255, 255, 0.15);
+    }
+
+    :host-context(body.light-theme) {
       color: #1e293b;
-      min-height: 100vh;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --title-color: #0f172a;
+      --sub-text: #64748b;
+      --table-header-bg: #f1f5f9;
+      --table-header-border: #e2e8f0;
+      --daily-bg: #f8fafc;
+      --cell-bg: #ffffff;
+      --cell-border: #e2e8f0;
+      --cell-weekend-bg: #f8fafc;
+      --cell-today-bg: #ecfeff;
+      --cell-today-border: rgba(14, 165, 233, 0.35);
+      --modal-backdrop: rgba(15, 23, 42, 0.58);
+      --modal-bg: #ffffff;
+      --modal-header-bg: #f8fafc;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --input-color: #1e293b;
+      --empty-cell-btn-color: #cbd5e1;
     }
 
-    .shift-page {
-      padding: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(14, 165, 233, 0.10), transparent 28%),
-        #f8fafc;
-      min-height: 100vh;
-    }
-
-    .page-header {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 22px 24px;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-      margin-bottom: 16px;
-    }
-
-    .eyebrow {
-      font-size: 12px;
-      color: #0284c7;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 6px;
-    }
-
-    .page-header h1 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 28px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .page-header h1 i {
-      color: #0284c7;
-    }
-
-    .page-header p {
-      margin: 6px 0 0;
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .btn-soft,
-    .btn-icon,
-    .btn-primary-av,
-    .btn-danger-soft {
-      border: 0;
-      border-radius: 12px;
-      padding: 9px 14px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: .15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .btn-soft {
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid #e2e8f0;
-    }
-
-    .btn-soft:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-icon {
-      background: #ffffff;
-      color: #334155;
-      border: 1px solid #e2e8f0;
+    /* Small icon button for prev/next month nav */
+    .sc-icon-btn {
       width: 38px;
       height: 38px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      padding: 0;
+      transition: .15s ease;
     }
 
-    .btn-icon:hover {
-      border-color: #0284c7;
-      color: #0284c7;
+    .sc-icon-btn:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
     }
 
-    .btn-primary-av {
-      background: linear-gradient(135deg, #0284c7, #0ea5e9);
-      color: #ffffff;
-      box-shadow: 0 8px 18px rgba(2, 132, 199, 0.25);
-    }
-
-    .btn-primary-av:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(2, 132, 199, 0.32);
-    }
-
-    .btn-danger-soft {
-      background: #fee2e2;
-      color: #b91c1c;
+    :host-context(body.light-theme) .sc-icon-btn {
+      border-color: #cbd5e1;
+      color: #64748b;
     }
 
     .month-pill {
-      background: #0f172a;
-      color: #ffffff;
+      background: var(--table-header-bg);
+      color: var(--title-color);
+      border: 1px solid var(--card-border);
       border-radius: 999px;
       padding: 9px 16px;
       font-size: 13px;
@@ -422,114 +394,41 @@ import { throwError } from 'rxjs';
       white-space: nowrap;
     }
 
-    .toolbar-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
-      margin-bottom: 16px;
+    /* Dropdown menu for engineer filter */
+    .sc-dropdown-menu {
+      background-color: #1e2638;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 0.75rem !important;
+      min-width: 200px;
     }
 
-    .filter-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #64748b;
+    :host-context(body.light-theme) .sc-dropdown-menu {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
     }
 
-    .filter-box select {
-      min-width: 210px;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      color: #1e293b;
-      border-radius: 12px;
-      padding: 9px 12px;
-      outline: none;
+    /* Content card sub-header elements */
+    .sc-sub-text {
+      color: var(--sub-text);
+      font-size: 12px;
       font-weight: 600;
+      display: block;
+      margin-top: 3px;
     }
 
-    .toolbar-note {
-      color: #64748b;
-      font-size: 13px;
+    .sc-card-header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(150px, 1fr));
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .summary-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
-    }
-
-    .summary-card .label {
-      color: #64748b;
+    .sc-tip {
+      color: var(--sub-text);
       font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-
-    .summary-card strong {
-      display: block;
-      margin-top: 7px;
-      color: #0f172a;
-      font-size: 28px;
-      line-height: 1;
-      font-weight: 900;
-    }
-
-    .summary-card small {
-      display: block;
-      margin-top: 7px;
-      color: #64748b;
-      font-size: 12px;
-    }
-
-    .schedule-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
-      overflow: hidden;
-    }
-
-    .schedule-titlebar {
-      padding: 16px 18px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .schedule-titlebar h2 {
-      margin: 0;
-      color: #0284c7;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .06em;
-    }
-
-    .schedule-titlebar span {
-      color: #64748b;
-      font-size: 12px;
-      font-weight: 600;
+      font-style: italic;
+      white-space: nowrap;
     }
 
     .legend {
@@ -542,7 +441,7 @@ import { throwError } from 'rxjs';
       display: flex;
       align-items: center;
       gap: 6px;
-      color: #475569;
+      color: var(--sub-text);
       font-weight: 700;
       font-size: 12px;
     }
@@ -554,25 +453,25 @@ import { throwError } from 'rxjs';
       display: inline-block;
     }
 
-    .dot.morning { background: #0ea5e9; }
-    .dot.evening { background: #8b5cf6; }
-    .dot.night { background: #4f46e5; }
+    .dot.morning  { background: #38bdf8; }
+    .dot.evening  { background: #8b5cf6; }
+    .dot.night    { background: #4f46e5; }
     .dot.vacation { background: #94a3b8; }
 
+    /* ── Table ── */
     .loading-box {
       min-height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      color: #64748b;
+      color: var(--sub-text);
       font-weight: 700;
     }
 
     .schedule-scroll {
       overflow: auto;
       max-height: 68vh;
-      position: relative;
     }
 
     .schedule-table {
@@ -590,10 +489,10 @@ import { throwError } from 'rxjs';
       z-index: 5;
       min-width: 76px;
       width: 76px;
-      background: #0f172a;
-      color: #ffffff;
-      border-right: 1px solid rgba(255, 255, 255, .08);
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      background: var(--table-header-bg);
+      color: var(--title-color);
+      border-right: 1px solid var(--table-header-border);
+      border-bottom: 1px solid var(--table-header-border);
       padding: 9px 6px;
       text-align: center;
     }
@@ -605,28 +504,18 @@ import { throwError } from 'rxjs';
       width: 245px !important;
       text-align: left !important;
       padding-left: 16px !important;
-      background: #0b1220 !important;
+      background: var(--table-header-bg) !important;
+      color: var(--title-color) !important;
+      border-right: 2px solid var(--card-border) !important;
     }
 
-    .day-num {
-      font-size: 14px;
-      font-weight: 900;
-      line-height: 1;
-    }
+    .day-num { font-size: 14px; font-weight: 900; line-height: 1; }
+    .day-name { margin-top: 4px; color: var(--sub-text); font-size: 10px; font-weight: 700; }
 
-    .day-name {
-      margin-top: 4px;
-      color: #cbd5e1;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .weekend-head {
-      background: #1e293b !important;
-    }
+    .weekend-head { background: var(--table-header-bg) !important; opacity: .95; }
 
     .today-head {
-      background: #075985 !important;
+      background: rgba(56, 189, 248, 0.15) !important;
       box-shadow: inset 0 -3px 0 #38bdf8;
     }
 
@@ -634,9 +523,9 @@ import { throwError } from 'rxjs';
       position: sticky;
       top: 53px;
       z-index: 4;
-      background: #f8fafc;
-      border-right: 1px solid #e2e8f0;
-      border-bottom: 1px solid #e2e8f0;
+      background: var(--daily-bg);
+      border-right: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
       padding: 7px 6px;
       text-align: center;
       min-width: 76px;
@@ -645,35 +534,21 @@ import { throwError } from 'rxjs';
 
     .daily-row .engineer-head {
       z-index: 7 !important;
-      background: #0b1220 !important;
-      color: #cbd5e1;
+      background: var(--table-header-bg) !important;
+      color: var(--title-color) !important;
     }
 
-    .daily-label {
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.5;
-    }
-
-    .daily-hours {
-      color: #0284c7;
-      font-weight: 900;
-      font-size: 12px;
-    }
-
-    .daily-people {
-      color: #64748b;
-      font-weight: 800;
-      font-size: 11px;
-    }
+    .daily-label { font-size: 11px; font-weight: 700; line-height: 1.5; }
+    .daily-hours { color: #3b82f6; font-weight: 900; font-size: 12px; }
+    .daily-people { color: var(--sub-text); font-weight: 800; font-size: 11px; }
 
     .schedule-table tbody td {
       min-width: 76px;
       width: 76px;
       height: 82px;
-      border-right: 1px solid #e2e8f0;
-      border-bottom: 1px solid #e2e8f0;
-      background: #ffffff;
+      border-right: 1px solid var(--cell-border);
+      border-bottom: 1px solid var(--cell-border);
+      background: var(--cell-bg);
       padding: 7px;
       vertical-align: middle;
       text-align: center;
@@ -685,59 +560,48 @@ import { throwError } from 'rxjs';
       z-index: 3;
       min-width: 245px !important;
       width: 245px !important;
-      background: #ffffff !important;
+      background: var(--card-bg) !important;
+      color: var(--title-color) !important;
       text-align: left !important;
-      border-right: 2px solid #cbd5e1 !important;
+      border-right: 2px solid var(--card-border) !important;
       padding: 10px 14px !important;
     }
 
-    .engineer-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .engineer-info { display: flex; align-items: center; gap: 10px; }
 
     .avatar {
       width: 38px;
       height: 38px;
       border-radius: 999px;
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      box-shadow: 0 6px 16px rgba(2, 132, 199, .22);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, .22);
       flex: 0 0 auto;
     }
 
-    .engineer-name {
-      color: #0f172a;
-      font-weight: 900;
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .engineer-hours {
-      color: #64748b;
-      font-size: 11px;
-      margin-top: 4px;
-      font-weight: 700;
-    }
+    .engineer-name  { color: var(--title-color); font-weight: 900; font-size: 13px; line-height: 1.2; }
+    .engineer-hours { color: var(--sub-text); font-size: 11px; margin-top: 4px; font-weight: 700; }
 
     .schedule-table tbody tr:hover .engineer-cell,
     .schedule-table tbody tr:hover .schedule-cell {
-      background: #f8fafc;
+      background: rgba(255, 255, 255, 0.02) !important;
     }
 
-    .schedule-cell.weekend-cell,
-    .weekend-cell {
+    :host-context(body.light-theme) .schedule-table tbody tr:hover .engineer-cell,
+    :host-context(body.light-theme) .schedule-table tbody tr:hover .schedule-cell {
       background: #f8fafc !important;
     }
 
+    .schedule-cell.weekend-cell,
+    .weekend-cell { background: var(--cell-weekend-bg) !important; }
+
     .today-cell {
-      background: #ecfeff !important;
-      box-shadow: inset 0 0 0 2px rgba(14, 165, 233, .35);
+      background: var(--cell-today-bg) !important;
+      box-shadow: inset 0 0 0 2px var(--cell-today-border);
     }
 
     .shift-card {
@@ -751,108 +615,58 @@ import { throwError } from 'rxjs';
       flex-direction: column;
       justify-content: center;
       border-left: 4px solid transparent;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    :host-context(body.light-theme) .shift-card {
       box-shadow: 0 4px 10px rgba(15, 23, 42, .06);
     }
 
-    .shift-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 18px rgba(15, 23, 42, .14);
-    }
+    .shift-card:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,.25); }
+    :host-context(body.light-theme) .shift-card:hover { box-shadow: 0 10px 18px rgba(15,23,42,.14); }
 
-    .shift-card strong {
-      display: block;
-      font-size: 11px;
-      font-weight: 900;
-      line-height: 1.15;
-    }
+    .shift-card strong { display: block; font-size: 11px; font-weight: 900; line-height: 1.15; }
+    .shift-card span   { display: block; font-size: 10px; margin-top: 4px; font-weight: 700; opacity: .86; }
+    .shift-card small  { display: block; font-size: 9px; margin-top: 3px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .shift-card span {
-      display: block;
-      font-size: 10px;
-      margin-top: 4px;
-      font-weight: 700;
-      opacity: .86;
-    }
+    .shift-morning { background: #e0f2fe; color: #075985; border-left-color: #0284c7; }
+    .shift-evening { background: #ede9fe; color: #5b21b6; border-left-color: #7c3aed; }
+    .shift-night   { background: #e0e7ff; color: #3730a3; border-left-color: #4f46e5; }
+    .shift-off     { background: rgba(255,255,255,.05); color: var(--sub-text); border-left-color: #94a3b8; }
+    :host-context(body.light-theme) .shift-off { background: #f1f5f9; color: #64748b; }
 
-    .shift-card small {
-      display: block;
-      font-size: 9px;
-      margin-top: 3px;
-      opacity: .8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .shift-morning {
-      background: #e0f2fe;
-      color: #075985;
-      border-left-color: #0284c7;
-    }
-
-    .shift-evening {
-      background: #ede9fe;
-      color: #5b21b6;
-      border-left-color: #7c3aed;
-    }
-
-    .shift-night {
-      background: #e0e7ff;
-      color: #3730a3;
-      border-left-color: #4f46e5;
-    }
-
-    .shift-off {
-      background: #f1f5f9;
-      color: #64748b;
-      border-left-color: #94a3b8;
-    }
-
-    .vacation-cell {
-      background: #f8fafc !important;
-      padding: 8px !important;
-    }
+    .vacation-cell  { background: var(--cell-weekend-bg) !important; padding: 8px !important; }
 
     .vacation-bar {
       height: 54px;
-      background: linear-gradient(135deg, #cbd5e1, #94a3b8);
-      color: #334155;
+      background: linear-gradient(135deg, #64748b, #475569);
+      color: #ffffff;
       border-radius: 13px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 0 1px rgba(51, 65, 85, .18), 0 6px 14px rgba(15, 23, 42, .10);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 6px 14px rgba(0,0,0,.25);
       transition: .15s ease;
     }
 
-    .vacation-bar:hover {
-      transform: translateY(-1px);
-      box-shadow: inset 0 0 0 1px rgba(51, 65, 85, .25), 0 10px 18px rgba(15, 23, 42, .16);
+    :host-context(body.light-theme) .vacation-bar {
+      background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+      color: #334155;
     }
 
-    .vacation-bar strong {
-      font-size: 12px;
-      font-weight: 900;
-    }
+    .vacation-bar:hover { transform: translateY(-1px); }
+    .vacation-bar strong { font-size: 12px; font-weight: 900; }
+    .vacation-bar span   { margin-top: 4px; font-size: 10px; font-weight: 700; opacity: .85; }
 
-    .vacation-bar span {
-      margin-top: 4px;
-      font-size: 10px;
-      font-weight: 700;
-      opacity: .85;
-    }
-
-    .empty-cell {
-      position: relative;
-    }
+    .empty-cell { position: relative; }
 
     .add-cell-btn {
       width: 28px;
       height: 28px;
       border-radius: 999px;
-      border: 1px dashed #cbd5e1;
+      border: 1px dashed var(--empty-cell-btn-color);
       background: transparent;
       color: transparent;
       font-weight: 900;
@@ -861,22 +675,18 @@ import { throwError } from 'rxjs';
     }
 
     .empty-cell:hover .add-cell-btn {
-      color: #0284c7;
-      background: #e0f2fe;
-      border-color: #38bdf8;
+      color: #3b82f6;
+      background: rgba(59,130,246,.15);
+      border-color: #3b82f6;
     }
 
-    .empty-state {
-      padding: 40px !important;
-      color: #64748b;
-      font-weight: 700;
-      text-align: center;
-    }
+    .empty-state { padding: 40px !important; color: var(--sub-text); font-weight: 700; text-align: center; }
 
+    /* ── Modal ── */
     .modal-backdrop-custom {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, .58);
+      background: var(--modal-backdrop);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -887,41 +697,33 @@ import { throwError } from 'rxjs';
 
     .modal-card {
       width: min(560px, 100%);
-      background: #ffffff;
-      color: #1e293b;
+      background: var(--modal-bg);
+      color: #f8fafc;
       border-radius: 20px;
-      box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
       overflow: hidden;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--card-border);
     }
+
+    :host-context(body.light-theme) .modal-card { color: #1e293b; box-shadow: 0 24px 70px rgba(15,23,42,.28); }
 
     .modal-header-custom {
       padding: 20px 22px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--card-border);
       display: flex;
       justify-content: space-between;
       gap: 12px;
       align-items: flex-start;
-      background: #f8fafc;
+      background: var(--modal-header-bg);
     }
 
-    .modal-header-custom h3 {
-      margin: 0;
-      color: #0f172a;
-      font-weight: 900;
-      font-size: 20px;
-    }
-
-    .modal-header-custom p {
-      margin: 5px 0 0;
-      color: #64748b;
-      font-size: 13px;
-    }
+    .modal-header-custom h3 { margin: 0; color: var(--title-color); font-weight: 900; font-size: 20px; }
+    .modal-header-custom p  { margin: 5px 0 0; color: var(--sub-text); font-size: 13px; }
 
     .modal-close {
       border: 0;
-      background: #e2e8f0;
-      color: #334155;
+      background: rgba(255,255,255,.07);
+      color: var(--sub-text);
       width: 34px;
       height: 34px;
       border-radius: 999px;
@@ -930,23 +732,16 @@ import { throwError } from 'rxjs';
       cursor: pointer;
     }
 
-    .modal-body-custom {
-      padding: 22px;
-    }
+    :host-context(body.light-theme) .modal-close { background: #f1f5f9; }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .modal-body-custom { padding: 22px; }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { margin-bottom: 14px; }
 
     .form-group label {
       display: block;
-      color: #475569;
+      color: var(--sub-text);
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
@@ -957,9 +752,9 @@ import { throwError } from 'rxjs';
     .form-group input,
     .form-group select {
       width: 100%;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      color: #1e293b;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--input-color);
       border-radius: 12px;
       padding: 10px 12px;
       outline: none;
@@ -968,60 +763,26 @@ import { throwError } from 'rxjs';
 
     .form-group input:focus,
     .form-group select:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, .15);
-      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59,130,246,.15);
+      background: var(--card-bg);
     }
 
     .modal-footer-custom {
       padding: 16px 22px;
-      border-top: 1px solid #e2e8f0;
+      border-top: 1px solid var(--card-border);
       display: flex;
       justify-content: space-between;
       gap: 12px;
       align-items: center;
-      background: #f8fafc;
+      background: var(--modal-header-bg);
     }
 
-    .modal-footer-right {
-      display: flex;
-      gap: 10px;
-      margin-left: auto;
-    }
-
-    @media (max-width: 1100px) {
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .page-header,
-      .toolbar-card,
-      .schedule-titlebar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .header-actions {
-        justify-content: flex-start;
-      }
-    }
+    .modal-footer-right { display: flex; gap: 10px; margin-left: auto; }
 
     @media (max-width: 650px) {
-      .shift-page {
-        padding: 14px;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .page-header h1 {
-        font-size: 22px;
-      }
+      .form-row { grid-template-columns: 1fr; }
+      .sc-card-header-right { flex-direction: column; align-items: flex-start; }
     }
   `]
 })
@@ -1051,7 +812,6 @@ export class ShiftScheduleComponent implements OnInit {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  // Precalculated maps & values for high-performance rendering & crash prevention
   engineerCellsMap: Record<string, any[]> = {};
   engineerTotalHoursMap: Record<string, number> = {};
   dailyHoursMap: Record<string, number> = {};
@@ -1081,6 +841,17 @@ export class ShiftScheduleComponent implements OnInit {
     });
   }
 
+  selectEngineer(id: string) {
+    this.filterEngineerId = id;
+    this.loadShifts();
+  }
+
+  getSelectedEngineerName(): string {
+    if (!this.filterEngineerId) return 'All Engineers';
+    const eng = this.engineers.find(e => e._id === this.filterEngineerId);
+    return eng ? eng.name : 'All Engineers';
+  }
+
   loadEngineers() {
     this.usersService.getUsers().pipe(
       timeout(10000),
@@ -1092,17 +863,10 @@ export class ShiftScheduleComponent implements OnInit {
       next: (res: any) => {
         const usersPayload = res?.data ?? res?.users ?? res;
         const users = Array.isArray(usersPayload) ? usersPayload : [];
-
         this.engineers = users.filter((u: any) =>
-          u.role === 'engineer' ||
-          u.role === 'ENGINEER' ||
-          u.role === 'Engineer' ||
-          u.position === 'Engineer'
+          u.role === 'engineer' || u.role === 'ENGINEER' || u.role === 'Engineer' || u.position === 'Engineer'
         );
-
-        if (this.engineers.length === 0) {
-          this.engineers = users;
-        }
+        if (this.engineers.length === 0) this.engineers = users;
         this.precalculateAll();
       },
       error: (err) => {
@@ -1114,11 +878,10 @@ export class ShiftScheduleComponent implements OnInit {
 
   loadShifts() {
     this.isLoading = true;
-
     const monthStr = `${this.selectedYear}-${(this.selectedMonth + 1).toString().padStart(2, '0')}`;
 
     this.shiftsService.getShifts(monthStr, this.filterEngineerId).pipe(
-      timeout(10000), // 10 seconds timeout
+      timeout(10000),
       catchError((err) => {
         console.error('Shifts load failed or timed out:', err);
         return throwError(() => new Error(err.message || 'Request timed out'));
@@ -1143,95 +906,51 @@ export class ShiftScheduleComponent implements OnInit {
   generateCalendarDays() {
     const daysInMonth = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
     const daysArr = [];
-
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(this.selectedYear, this.selectedMonth, d);
       const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }).substring(0, 2);
-
       daysArr.push({
         dayNum: d,
         dayName,
         dateString: `${this.selectedYear}-${(this.selectedMonth + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
       });
     }
-
     this.days = daysArr;
   }
 
-  // Pure, crash-safe, pre-calculations that execute once on data load
   precalculateAll() {
     try {
       const cellsMap: Record<string, any[]> = {};
       const hoursMap: Record<string, number> = {};
-      
-      // Initialize hours for all loaded engineers to 0
-      for (const eng of this.engineers) {
-        hoursMap[eng._id] = 0;
-      }
+      for (const eng of this.engineers) hoursMap[eng._id] = 0;
 
       const daysInMonth = this.days.length;
-
       for (const engineer of this.engineers) {
         const cells = [];
         const engShifts = this.shifts.filter((s: any) => this.getShiftEngineerId(s) === engineer._id);
-        
         let d = 1;
         while (d <= daysInMonth) {
           const currentDateStr = this.days[d - 1].dateString;
-
           const vacation = engShifts.find(s =>
-            s.type === 'Vacation' &&
-            s.startDate &&
-            s.endDate &&
-            s.startDate <= currentDateStr &&
-            s.endDate >= currentDateStr
+            s.type === 'Vacation' && s.startDate && s.endDate &&
+            s.startDate <= currentDateStr && s.endDate >= currentDateStr
           );
-
           if (vacation) {
             const lastDayStr = this.days[daysInMonth - 1].dateString;
             const vacEnd = (vacation.endDate && vacation.endDate > lastDayStr) ? lastDayStr : (vacation.endDate || currentDateStr);
             const parts = vacEnd.split('-');
             const endDay = parts.length === 3 ? Number(parts[2]) : d;
-            
-            let span = 1;
-            if (!isNaN(endDay)) {
-              span = Math.max(endDay - d + 1, 1);
-            }
-
-            cells.push({
-              type: 'Vacation',
-              span,
-              shift: vacation,
-              dateString: currentDateStr
-            });
-
+            const span = !isNaN(endDay) ? Math.max(endDay - d + 1, 1) : 1;
+            cells.push({ type: 'Vacation', span, shift: vacation, dateString: currentDateStr });
             d += span;
           } else {
-            const shift = engShifts.find(s =>
-              s.type !== 'Vacation' &&
-              s.startDate === currentDateStr
-            );
-
+            const shift = engShifts.find(s => s.type !== 'Vacation' && s.startDate === currentDateStr);
             if (shift) {
-              cells.push({
-                type: 'Shift',
-                span: 1,
-                shift,
-                dateString: currentDateStr
-              });
-              // Add to engineer hours if not Vacation or Off
-              if (shift.type !== 'Off' && shift.hours) {
-                hoursMap[engineer._id] += (Number(shift.hours) || 0);
-              }
+              cells.push({ type: 'Shift', span: 1, shift, dateString: currentDateStr });
+              if (shift.type !== 'Off' && shift.hours) hoursMap[engineer._id] += (Number(shift.hours) || 0);
             } else {
-              cells.push({
-                type: 'Empty',
-                span: 1,
-                shift: null,
-                dateString: currentDateStr
-              });
+              cells.push({ type: 'Empty', span: 1, shift: null, dateString: currentDateStr });
             }
-
             d += 1;
           }
         }
@@ -1240,104 +959,53 @@ export class ShiftScheduleComponent implements OnInit {
       this.engineerCellsMap = cellsMap;
       this.engineerTotalHoursMap = hoursMap;
 
-      // Calculate daily hours and people
       const dailyHours: Record<string, number> = {};
       const dailyPeople: Record<string, number> = {};
-      
       for (const day of this.days) {
         const dateStr = day.dateString;
-        
-        // Daily hours
-        const hrs = this.shifts
+        dailyHours[dateStr] = this.shifts
           .filter(s => s.type !== 'Vacation' && s.type !== 'Off' && s.startDate && s.endDate && s.startDate <= dateStr && s.endDate >= dateStr)
           .reduce((sum, s) => sum + (Number(s.hours) || 0), 0);
-        dailyHours[dateStr] = hrs;
-
-        // Daily people count
         const peopleSet = new Set<string>();
         this.shifts
           .filter(s => s.type !== 'Vacation' && s.type !== 'Off' && s.startDate && s.endDate && s.startDate <= dateStr && s.endDate >= dateStr)
-          .forEach((s: any) => {
-            const engId = this.getShiftEngineerId(s);
-            if (engId) peopleSet.add(engId);
-          });
+          .forEach((s: any) => { const id = this.getShiftEngineerId(s); if (id) peopleSet.add(id); });
         dailyPeople[dateStr] = peopleSet.size;
       }
-      
       this.dailyHoursMap = dailyHours;
       this.dailyPeopleMap = dailyPeople;
 
-      // Summary metrics
-      this.totalScheduledHours = this.shifts
-        .filter(s => s.type !== 'Vacation' && s.type !== 'Off')
-        .reduce((sum, s) => sum + (Number(s.hours) || 0), 0);
-
+      this.totalScheduledHours = this.shifts.filter(s => s.type !== 'Vacation' && s.type !== 'Off').reduce((sum, s) => sum + (Number(s.hours) || 0), 0);
       const uniquePeople = new Set<string>();
-      this.shifts
-        .filter(s => s.type !== 'Vacation' && s.type !== 'Off')
-        .forEach((s: any) => {
-          const engId = this.getShiftEngineerId(s);
-          if (engId) uniquePeople.add(engId);
-        });
+      this.shifts.filter(s => s.type !== 'Vacation' && s.type !== 'Off').forEach((s: any) => { const id = this.getShiftEngineerId(s); if (id) uniquePeople.add(id); });
       this.peopleCount = uniquePeople.size;
-
       this.totalShiftCount = this.shifts.filter(s => s.type !== 'Vacation' && s.type !== 'Off').length;
-
-      this.vacationDaysCount = this.shifts
-        .filter(s => s.type === 'Vacation' && s.startDate && s.endDate)
-        .reduce((sum, s) => {
-          const start = new Date(s.startDate);
-          const end = new Date(s.endDate);
-          if (isNaN(start.getTime()) || isNaN(end.getTime())) return sum;
-          const diff = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-          return sum + Math.max(diff, 1);
-        }, 0);
-
+      this.vacationDaysCount = this.shifts.filter(s => s.type === 'Vacation' && s.startDate && s.endDate).reduce((sum, s) => {
+        const start = new Date(s.startDate);
+        const end = new Date(s.endDate);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) return sum;
+        return sum + Math.max(Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1, 1);
+      }, 0);
     } catch (error) {
       console.error('Error precalculating shift schedule data:', error);
     }
   }
 
-  setCurrentMonth() {
-    this.selectedMonth = 2;
-    this.selectedYear = 2026;
-    this.generateCalendarDays();
-    this.loadShifts();
-  }
-
-  getMonthName(): string {
-    return this.monthsList[this.selectedMonth];
-  }
+  setCurrentMonth() { this.selectedMonth = 2; this.selectedYear = 2026; this.generateCalendarDays(); this.loadShifts(); }
+  getMonthName(): string { return this.monthsList[this.selectedMonth]; }
 
   prevMonth() {
-    if (this.selectedMonth === 0) {
-      this.selectedMonth = 11;
-      this.selectedYear--;
-    } else {
-      this.selectedMonth--;
-    }
-
-    this.generateCalendarDays();
-    this.loadShifts();
+    if (this.selectedMonth === 0) { this.selectedMonth = 11; this.selectedYear--; } else { this.selectedMonth--; }
+    this.generateCalendarDays(); this.loadShifts();
   }
 
   nextMonth() {
-    if (this.selectedMonth === 11) {
-      this.selectedMonth = 0;
-      this.selectedYear++;
-    } else {
-      this.selectedMonth++;
-    }
-
-    this.generateCalendarDays();
-    this.loadShifts();
+    if (this.selectedMonth === 11) { this.selectedMonth = 0; this.selectedYear++; } else { this.selectedMonth++; }
+    this.generateCalendarDays(); this.loadShifts();
   }
 
   getFilteredEngineers() {
-    if (this.filterEngineerId) {
-      return this.engineers.filter(e => e._id === this.filterEngineerId);
-    }
-    return this.engineers;
+    return this.filterEngineerId ? this.engineers.filter(e => e._id === this.filterEngineerId) : this.engineers;
   }
 
   getShiftEngineerId(shift: any): string {
@@ -1350,84 +1018,37 @@ export class ShiftScheduleComponent implements OnInit {
 
   getShiftClass(type: string): string {
     switch (type) {
-      case 'Morning':
-        return 'shift-morning';
-      case 'Evening':
-        return 'shift-evening';
-      case 'Night':
-        return 'shift-night';
-      case 'Off':
-        return 'shift-off';
-      default:
-        return 'shift-off';
+      case 'Morning': return 'shift-morning';
+      case 'Evening': return 'shift-evening';
+      case 'Night':   return 'shift-night';
+      default:        return 'shift-off';
     }
   }
 
-  isWeekend(dateStr: string): boolean {
-    const date = new Date(dateStr);
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  }
-
-  isToday(dateStr: string): boolean {
-    const today = new Date().toISOString().split('T')[0];
-    return dateStr === today;
-  }
+  isWeekend(dateStr: string): boolean { const d = new Date(dateStr).getDay(); return d === 0 || d === 6; }
+  isToday(dateStr: string): boolean { return dateStr === new Date().toISOString().split('T')[0]; }
 
   getInitials(name: string): string {
     if (!name) return '?';
-
-    return name
-      .split(' ')
-      .map(part => part.charAt(0))
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
+    return name.split(' ').map(p => p.charAt(0)).join('').substring(0, 2).toUpperCase();
   }
 
-  showTimeFields(): boolean {
-    const type = this.shiftForm.get('type')?.value;
-    return type !== 'Vacation' && type !== 'Off';
-  }
-
-  showHoursField(): boolean {
-    const type = this.shiftForm.get('type')?.value;
-    return type !== 'Vacation';
-  }
+  showTimeFields(): boolean { const t = this.shiftForm.get('type')?.value; return t !== 'Vacation' && t !== 'Off'; }
+  showHoursField(): boolean { return this.shiftForm.get('type')?.value !== 'Vacation'; }
 
   onShiftTypeChange() {
     const type = this.shiftForm.get('type')?.value;
-
-    if (type === 'Morning') {
-      this.shiftForm.patchValue({ startTime: '08:00', endTime: '16:00', hours: 8 });
-    } else if (type === 'Evening') {
-      this.shiftForm.patchValue({ startTime: '16:00', endTime: '24:00', hours: 8 });
-    } else if (type === 'Night') {
-      this.shiftForm.patchValue({ startTime: '00:00', endTime: '08:00', hours: 8 });
-    } else if (type === 'Off') {
-      this.shiftForm.patchValue({ startTime: '', endTime: '', hours: 0 });
-    } else if (type === 'Vacation') {
-      this.shiftForm.patchValue({ startTime: '', endTime: '', hours: 0 });
-    }
+    if (type === 'Morning')  this.shiftForm.patchValue({ startTime: '08:00', endTime: '16:00', hours: 8 });
+    else if (type === 'Evening') this.shiftForm.patchValue({ startTime: '16:00', endTime: '24:00', hours: 8 });
+    else if (type === 'Night')   this.shiftForm.patchValue({ startTime: '00:00', endTime: '08:00', hours: 8 });
+    else this.shiftForm.patchValue({ startTime: '', endTime: '', hours: 0 });
   }
 
   openAddModal(engineerId?: string, dateStr?: string) {
     this.isEditing = false;
     this.editingShiftId = null;
-
     const defaultDate = dateStr || `${this.selectedYear}-${(this.selectedMonth + 1).toString().padStart(2, '0')}-01`;
-
-    this.shiftForm.reset({
-      engineerId: engineerId || '',
-      type: 'Morning',
-      startDate: defaultDate,
-      endDate: defaultDate,
-      startTime: '08:00',
-      endTime: '16:00',
-      hours: 8,
-      notes: ''
-    });
-
+    this.shiftForm.reset({ engineerId: engineerId || '', type: 'Morning', startDate: defaultDate, endDate: defaultDate, startTime: '08:00', endTime: '16:00', hours: 8, notes: '' });
     this.isModalOpen = true;
   }
 
@@ -1435,82 +1056,35 @@ export class ShiftScheduleComponent implements OnInit {
     if (!shift) return;
     this.isEditing = true;
     this.editingShiftId = shift._id;
-
-    this.shiftForm.reset({
-      engineerId: this.getShiftEngineerId(shift),
-      type: shift.type,
-      startDate: shift.startDate,
-      endDate: shift.endDate,
-      startTime: shift.startTime || '',
-      endTime: shift.endTime || '',
-      hours: shift.hours || 0,
-      notes: shift.notes || ''
-    });
-
+    this.shiftForm.reset({ engineerId: this.getShiftEngineerId(shift), type: shift.type, startDate: shift.startDate, endDate: shift.endDate, startTime: shift.startTime || '', endTime: shift.endTime || '', hours: shift.hours || 0, notes: shift.notes || '' });
     this.isModalOpen = true;
   }
 
-  closeModal() {
-    this.isModalOpen = false;
-  }
+  closeModal() { this.isModalOpen = false; }
 
   saveShift() {
-    if (this.shiftForm.invalid) {
-      Swal.fire('Error', 'Please fill all required fields.', 'error');
-      return;
-    }
-
+    if (this.shiftForm.invalid) { Swal.fire('Error', 'Please fill all required fields.', 'error'); return; }
     const payload = this.shiftForm.value;
-
     if (this.isEditing && this.editingShiftId) {
       this.shiftsService.updateShift(this.editingShiftId, payload).subscribe({
-        next: () => {
-          Swal.fire('Updated', 'Shift schedule updated successfully.', 'success');
-          this.closeModal();
-          this.loadShifts();
-        },
-        error: (err) => {
-          console.error('Failed to update shift:', err);
-          Swal.fire('Error', 'Failed to update shift.', 'error');
-        }
+        next: () => { Swal.fire('Updated', 'Shift schedule updated successfully.', 'success'); this.closeModal(); this.loadShifts(); },
+        error: () => Swal.fire('Error', 'Failed to update shift.', 'error')
       });
     } else {
       this.shiftsService.createShift(payload).subscribe({
-        next: () => {
-          Swal.fire('Scheduled', 'New shift scheduled successfully.', 'success');
-          this.closeModal();
-          this.loadShifts();
-        },
-        error: (err) => {
-          console.error('Failed to create shift:', err);
-          Swal.fire('Error', 'Failed to create shift.', 'error');
-        }
+        next: () => { Swal.fire('Scheduled', 'New shift scheduled successfully.', 'success'); this.closeModal(); this.loadShifts(); },
+        error: () => Swal.fire('Error', 'Failed to create shift.', 'error')
       });
     }
   }
 
   deleteShift() {
     if (!this.editingShiftId) return;
-
-    Swal.fire({
-      title: 'Remove Shift?',
-      text: 'Are you sure you want to delete this shift from the schedule?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      confirmButtonText: 'Yes, delete it'
-    }).then((result) => {
+    Swal.fire({ title: 'Remove Shift?', text: 'Are you sure you want to delete this shift from the schedule?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Yes, delete it' }).then((result) => {
       if (result.isConfirmed) {
         this.shiftsService.deleteShift(this.editingShiftId!).subscribe({
-          next: () => {
-            Swal.fire('Deleted', 'Shift removed from schedule.', 'success');
-            this.closeModal();
-            this.loadShifts();
-          },
-          error: (err) => {
-            console.error('Failed to delete shift:', err);
-            Swal.fire('Error', 'Failed to delete shift.', 'error');
-          }
+          next: () => { Swal.fire('Deleted', 'Shift removed from schedule.', 'success'); this.closeModal(); this.loadShifts(); },
+          error: () => Swal.fire('Error', 'Failed to delete shift.', 'error')
         });
       }
     });

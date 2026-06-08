@@ -22,8 +22,8 @@ export class LoginComponent {
 
     constructor() {
         this.loginForm = this.fb.group({
-            email: ['test@gmail.com', [Validators.required, Validators.email]],
-            password: ['123456', Validators.required]
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required]
         });
     }
 
@@ -47,14 +47,19 @@ export class LoginComponent {
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        this.router.navigate(['/app/dashboard']);
+                        const destination = user.role === 'instructor'
+                            ? '/app/logbook/time-logs'
+                            : '/app/dashboard';
+                        this.router.navigate([destination]);
                     });
                 } else {
-                    Swal.fire('Login Failed', 'Invalid credentials. Please use test@gmail.com / 123456', 'error');
+                    Swal.fire('Login Failed', 'Invalid email or password', 'error');
                 }
             },
-            error: () => {
+            error: (err) => {
                 this.isSubmitting = false;
+                const message = err?.error?.message || 'Invalid email or password';
+                Swal.fire('Login Failed', message, 'error');
             }
         });
     }

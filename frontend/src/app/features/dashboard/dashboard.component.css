@@ -20,33 +20,4 @@
     color: #10b981;
 }
 
-.tracking-wide {
-    letter-spacing: 0.1em;
-}
-
-.tracking-widest {
-    letter-spacing: 0.15em;
-}
-
-.btn-pill {
-    border-radius: 50rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 0.6rem 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-darker {
-    background-color: transparent;
-    border: 1px solid #cbd5e1;
-    color: #64748b;
-}
-
-:host-context(body:not(.light-theme)) .btn-outline-darker {
-    border: 1px solid #334155;
-    color: #94a3b8;
-}
-
-.btn-outline-darker:hover {
-    background-color: rgba(148, 163, 184, 0.1);
-}
+/* tracking-wide, tracking-widest, btn-pill, btn-outline-darker are now in styles.css */

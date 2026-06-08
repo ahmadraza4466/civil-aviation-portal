@@ -35,6 +35,14 @@ export class TimeLogListComponent implements OnInit {
         });
     }
 
+    get snagLinkedCount(): number {
+        return this.logs.filter((l: any) => l.includeInSnag === 'Yes').length;
+    }
+
+    get cleanSessionCount(): number {
+        return this.logs.length - this.snagLinkedCount;
+    }
+
     onAdd() {
         this.router.navigate(['/app/logbook/time-logs/new']);
     }

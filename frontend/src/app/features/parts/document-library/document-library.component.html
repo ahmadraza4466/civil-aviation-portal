@@ -1,58 +1,109 @@
-<div class="container-fluid py-4">
-    <div class="mb-4 d-flex justify-content-between align-items-center">
+<div class="av-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
         <div>
-            <h2 class="fw-bold text-white mb-0" style="letter-spacing: 0.1em;"><i
-                    class="bi bi-file-earmark-text me-2 text-primary"></i>Document Library</h2>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a routerLink="/app/dashboard"
-                            style="color: #64748b; text-decoration: none;">Home</a></li>
-                    <li class="breadcrumb-item active text-secondary" aria-current="page">Documents</li>
-                </ol>
-            </nav>
+            <div class="page-eyebrow">Analytics Documentation</div>
+            <h1 class="page-title"><i class="bi bi-file-earmark-text"></i>Document Library</h1>
+            <p class="page-subtitle">Browse and download simulator technical documentation</p>
         </div>
-        <button class="btn btn-neon-blue btn-pill px-4"><i class="bi bi-upload me-2"></i>Upload Document</button>
+        <div class="page-header-actions">
+            <button class="btn btn-neon-blue btn-pill px-4">
+                <i class="bi bi-upload me-2"></i>Upload Document
+            </button>
+        </div>
     </div>
 
-    <div class="card dark-panel-card border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-dark-custom align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="ps-4">Document Name</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Date Uploaded</th>
-                            <th scope="col" class="text-end pe-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let doc of documents">
-                            <td class="ps-4 fw-medium text-white">
-                                <i class="bi"
-                                    [ngClass]="doc.type === 'PDF' ? 'bi-file-earmark-pdf text-danger' : 'bi-file-earmark-word text-primary'"
-                                    class="me-3 fs-5"></i>
-                                {{ doc.name }}
-                            </td>
-                            <td><span class="badge"
-                                    style="background-color: rgba(255,255,255,0.1); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);">{{
-                                    doc.type }}</span></td>
-                            <td class="text-secondary" style="font-size: 0.85rem;">{{ doc.size }}</td>
-                            <td class="text-secondary" style="font-size: 0.85rem; font-family: monospace;">{{ doc.date
-                                }}</td>
-                            <td class="text-end pe-4 gap-2">
-                                <button class="btn btn-sm btn-outline-info border-0 me-2" (click)="viewDoc(doc.name)">
-                                    <i class="bi bi-eye"></i> View
-                                </button>
-                                <button class="btn btn-sm btn-outline-success border-0" (click)="downloadDoc(doc.name)">
-                                    <i class="bi bi-download"></i> Download
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- Stats -->
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Total Documents</span>
+                <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
+                    <i class="bi bi-folder2-open" style="color:#3b82f6;"></i>
+                </div>
             </div>
+            <strong class="stat-value" style="color:#3b82f6;">{{ documents.length }}</strong>
+            <small class="stat-sub">In library</small>
+        </div>
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">PDF Files</span>
+                <div class="sc-stat-icon" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.2);">
+                    <i class="bi bi-file-earmark-pdf-fill" style="color:#ef4444;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#ef4444;">{{ pdfCount }}</strong>
+            <small class="stat-sub">PDF documents</small>
+        </div>
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">DOCX Files</span>
+                <div class="sc-stat-icon" style="background:rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.2);">
+                    <i class="bi bi-file-earmark-word-fill" style="color:#4f46e5;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#4f46e5;">{{ docxCount }}</strong>
+            <small class="stat-sub">Word documents</small>
         </div>
     </div>
+
+    <!-- Documents Table -->
+    <div class="content-card">
+        <div class="content-card-header">
+            <h2 class="content-card-title"><i class="bi bi-folder2-open me-2"></i>All Documents</h2>
+            <span class="text-secondary" style="font-size:12px;">{{ documents.length }} files</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0" style="min-width:600px;">
+                <thead>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                        <th style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:11px 20px;">Document Name</th>
+                        <th style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:11px 20px;">Type</th>
+                        <th style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:11px 20px;">Size</th>
+                        <th style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:11px 20px;">Date Uploaded</th>
+                        <th style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:11px 20px;text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let doc of documents" style="border-bottom:1px solid rgba(255,255,255,0.03);transition:background 0.15s;" class="doc-row">
+                        <td style="padding:14px 20px;vertical-align:middle;">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"
+                                    [style.background]="doc.type === 'PDF' ? 'rgba(239,68,68,0.12)' : 'rgba(79,70,229,0.12)'"
+                                    [style.border]="doc.type === 'PDF' ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(79,70,229,0.2)'">
+                                    <i class="bi fs-5"
+                                        [ngClass]="doc.type === 'PDF' ? 'bi-file-earmark-pdf-fill' : 'bi-file-earmark-word-fill'"
+                                        [style.color]="doc.type === 'PDF' ? '#ef4444' : '#4f46e5'"></i>
+                                </div>
+                                <span class="fw-semibold text-white" style="font-size:13px;">{{ doc.name }}</span>
+                            </div>
+                        </td>
+                        <td style="padding:14px 20px;vertical-align:middle;">
+                            <span class="badge rounded-pill px-3 py-2"
+                                [style.background]="doc.type === 'PDF' ? 'rgba(239,68,68,0.12)' : 'rgba(79,70,229,0.12)'"
+                                [style.color]="doc.type === 'PDF' ? '#ef4444' : '#4f46e5'"
+                                [style.border]="doc.type === 'PDF' ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(79,70,229,0.2)'"
+                                style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">
+                                {{ doc.type }}
+                            </span>
+                        </td>
+                        <td style="padding:14px 20px;vertical-align:middle;color:#94a3b8;font-size:13px;">{{ doc.size }}</td>
+                        <td style="padding:14px 20px;vertical-align:middle;color:#94a3b8;font-size:13px;font-family:monospace;">{{ doc.date }}</td>
+                        <td style="padding:14px 20px;vertical-align:middle;text-align:right;">
+                            <button class="btn btn-sm btn-outline-darker rounded-pill px-3 me-2" (click)="viewDoc(doc.name)">
+                                <i class="bi bi-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-sm rounded-pill px-3"
+                                style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.25);"
+                                (click)="downloadDoc(doc.name)">
+                                <i class="bi bi-download me-1"></i>Download
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>

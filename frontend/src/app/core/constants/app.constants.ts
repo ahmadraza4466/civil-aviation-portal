@@ -57,7 +57,7 @@ export const APP_CONSTANTS = {
     REPORT_TYPES: [
         { id: 'SHIFT_DIARY', name: 'Shift Diary Report' },
         { id: 'DR_ISSUE_SUMMARY', name: 'DR Issue Summary' },
-        { id: 'MAINTENANCE_SUMMARY', name: 'Maintenance Summary' },
+        { id: 'MAINTENANCE_SUMMARY', name: 'Defect Management Summary' },
         { id: 'PARTS_INVENTORY', name: 'Parts Inventory Report' }
     ]
 };

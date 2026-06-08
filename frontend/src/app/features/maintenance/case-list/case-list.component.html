@@ -1,78 +1,84 @@
-<div class="mb-4 d-flex justify-content-between align-items-center">
-    <div>
-        <h2 class="fw-bold text-white mb-0" style="letter-spacing: 0.1em;"><i
-                class="bi bi-tools me-2 text-primary"></i>Case Registry</h2>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a routerLink="/app/dashboard"
-                        style="color: #64748b; text-decoration: none;">Home</a></li>
-                <li class="breadcrumb-item active text-secondary" aria-current="page">Case Registry</li>
-            </ol>
-        </nav>
-    </div>
-</div>
+<div class="av-page">
 
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card dark-panel-card border-start border-primary border-4 py-2">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-xs font-weight-bold text-primary text-uppercase mb-1"
-                            style="font-size: 0.65rem; letter-spacing: 1px;">Total Cases</h6>
-                        <div class="h3 mb-0 font-weight-bold text-white">{{ totalCases }}</div>
-                    </div>
-                </div>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <div class="page-eyebrow">Defect Management</div>
+            <h1 class="page-title"><i class="bi bi-tools"></i>Case Registry</h1>
+            <p class="page-subtitle">Log, track, and resolve simulator defect cases</p>
+        </div>
+        <div class="page-header-actions">
+            <div class="dropdown">
+                <button class="btn btn-outline-darker btn-pill dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-funnel me-1"></i>{{ selectedDevice || 'All Devices' }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end"
+                    style="background-color: #1e2638; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.75rem; min-width: 170px;">
+                    <li>
+                        <a class="dropdown-item text-secondary py-2" href="javascript:void(0)" (click)="filterByDevice('')">
+                            <i class="bi bi-grid me-2 opacity-50"></i>All Devices
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider my-1" style="border-color: rgba(255,255,255,0.08);"></li>
+                    <li *ngFor="let device of deviceOptions">
+                        <a class="dropdown-item py-2"
+                            [class.text-info]="selectedDevice === device"
+                            [class.text-light]="selectedDevice !== device"
+                            href="javascript:void(0)" (click)="filterByDevice(device)">
+                            <i class="bi bi-check2 me-2" [style.visibility]="selectedDevice === device ? 'visible' : 'hidden'"></i>{{ device }}
+                        </a>
+                    </li>
+                </ul>
             </div>
+            <button class="btn btn-neon-blue btn-pill px-4" (click)="onAdd()">
+                <i class="bi bi-plus-lg me-1"></i>Enter new case
+            </button>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card dark-panel-card border-start border-warning border-4 py-2">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-xs font-weight-bold text-warning text-uppercase mb-1"
-                            style="font-size: 0.65rem; letter-spacing: 1px;">Open Cases</h6>
-                        <div class="h3 mb-0 font-weight-bold text-white">{{ openCasesCount }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card dark-panel-card border-start border-success border-4 py-2">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-xs font-weight-bold text-success text-uppercase mb-1"
-                            style="font-size: 0.65rem; letter-spacing: 1px;">Closed Cases</h6>
-                        <div class="h3 mb-0 font-weight-bold text-white">{{ closedCasesCount }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card dark-panel-card border-0">
-            <div class="card-header py-4 d-flex flex-row align-items-center justify-content-between"
-                style="background-color: transparent; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <h6 class="m-0 font-weight-bold text-secondary text-uppercase"
-                    style="letter-spacing: 1px; font-size: 0.75rem;"><i
-                        class="bi bi-list-check me-2 text-primary"></i>Snag Case List</h6>
-                <div class="dropdown no-arrow">
-                    <button class="btn btn-neon-blue btn-pill px-4" (click)="onAdd()">
-                        <i class="bi bi-plus-lg me-1"></i> Enter new case
-                    </button>
+    <!-- Stats -->
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Total Cases</span>
+                <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
+                    <i class="bi bi-folder2-open" style="color:#3b82f6;"></i>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <app-reusable-table [columns]="tableColumns" [data]="filteredCases" [itemsPerPage]="10"
-                    (edit)="onEdit($event)" (delete)="onDelete($event)">
-                </app-reusable-table>
+            <strong class="stat-value" style="color:#3b82f6;">{{ totalCases }}</strong>
+            <small class="stat-sub">All records</small>
+        </div>
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Open Cases</span>
+                <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
+                    <i class="bi bi-exclamation-circle-fill" style="color:#f59e0b;"></i>
+                </div>
             </div>
+            <strong class="stat-value" style="color:#f59e0b;">{{ openCasesCount }}</strong>
+            <small class="stat-sub">Pending resolution</small>
+        </div>
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Closed Cases</span>
+                <div class="sc-stat-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.2);">
+                    <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#10b981;">{{ closedCasesCount }}</strong>
+            <small class="stat-sub">Resolved</small>
         </div>
     </div>
+
+    <!-- Table Card -->
+    <div class="content-card">
+        <div class="content-card-header">
+            <h6 class="content-card-title"><i class="bi bi-list-check me-2"></i>Snag Case List</h6>
+        </div>
+        <app-reusable-table [columns]="tableColumns" [data]="filteredCases" [itemsPerPage]="10"
+            (edit)="onEdit($event)" (delete)="onDelete($event)">
+        </app-reusable-table>
+    </div>
+
 </div>

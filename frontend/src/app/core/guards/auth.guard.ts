@@ -8,17 +8,21 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     const router = inject(Router);
     const user = authService.currentUserValue;
 
-    if (user) {
-        // Placeholder logic for role-based access
-        const requiredRole = route.data['role'];
-        if (requiredRole && user.role !== requiredRole) {
-            Swal.fire('Access Denied', 'You do not have permission to view this page.', 'error');
-            router.navigate(['/app/dashboard']);
-            return false;
-        }
-        return true;
+    if (!user) {
+        router.navigate(['/login']);
+        return false;
     }
 
-    router.navigate(['/login']);
-    return false;
+    const allowedRoles: string[] | undefined = route.data['allowedRoles'];
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+        // Instructors are redirected to their only permitted screen
+        const fallback = user.role === 'instructor'
+            ? '/app/logbook/time-logs'
+            : '/app/dashboard';
+        Swal.fire('Access Denied', 'You do not have permission to view this page.', 'error');
+        router.navigate([fallback]);
+        return false;
+    }
+
+    return true;
 };

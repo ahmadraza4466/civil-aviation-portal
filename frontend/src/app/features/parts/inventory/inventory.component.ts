@@ -33,6 +33,9 @@ export class InventoryComponent implements OnInit {
     { key: 'status', header: 'Status' }
   ];
 
+  deviceOptions = ['Airbus FFS', 'Diamonds 40/42', 'Airbus Door Trainer', 'MPCT'];
+  selectedDevice = '';
+
   totalParts = 0;
   lowStockCount = 0;
   outOfStockCount = 0;
@@ -46,6 +49,13 @@ export class InventoryComponent implements OnInit {
     ];
     this.filteredParts = [...this.parts];
     this.updateSummary();
+  }
+
+  filterByDevice(device: string) {
+    this.selectedDevice = device;
+    this.filteredParts = device
+      ? this.parts.filter(p => (p as any).system === device)
+      : [...this.parts];
   }
 
   updateSummary() {

@@ -26,6 +26,14 @@ export class LayoutComponent implements OnInit {
     private router = inject(Router);
     public themeService = inject(ThemeService);
 
+    get isInstructor(): boolean {
+        return this.currentUser?.role === 'instructor';
+    }
+
+    get isAdmin(): boolean {
+        return this.currentUser?.role === 'admin';
+    }
+
     ngOnInit() {
         this.authService.user$.subscribe(user => {
             this.currentUser = user;

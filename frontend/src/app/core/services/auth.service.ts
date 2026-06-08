@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { delay, tap, map, catchError } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { ApiService } from './api.service';
@@ -126,8 +126,7 @@ export class AuthService {
                 }
             }),
             catchError(err => {
-                console.error('Login error', err);
-                return of(null);
+                throw err;
             })
         );
     }

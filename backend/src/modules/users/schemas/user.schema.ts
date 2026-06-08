@@ -6,6 +6,6 @@ export class User extends Document {
   @Prop({ required: true, unique: true }) email: string;
   @Prop({ required: true }) passwordHash: string;
   @Prop({ required: true }) name: string;
-  @Prop({ required: true, enum: ['admin', 'engineer'], default: 'engineer' }) role: string;
+  @Prop({ required: true, enum: ['admin', 'engineer', 'instructor'], default: 'engineer' }) role: string;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -192,7 +192,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                 datasets: [{
-                    label: 'Maintenance Tasks',
+                    label: 'Defect Management Tasks',
                     data: [12, 19, 3, 5, 2, 8],
                     backgroundColor: gradient,
                     borderRadius: 6,

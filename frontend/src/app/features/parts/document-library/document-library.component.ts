@@ -10,6 +10,9 @@ import Swal from 'sweetalert2';
     templateUrl: './document-library.component.html'
 })
 export class DocumentLibraryComponent {
+    get pdfCount(): number { return this.documents.filter(d => d.type === 'PDF').length; }
+    get docxCount(): number { return this.documents.filter(d => d.type === 'DOCX').length; }
+
     documents = [
         { id: 1, name: 'A350 Maintenance Manual Volume 1', type: 'PDF', size: '15 MB', date: '2025-10-15' },
         { id: 2, name: 'B737 Engine Schematic', type: 'PDF', size: '5 MB', date: '2026-01-20' },

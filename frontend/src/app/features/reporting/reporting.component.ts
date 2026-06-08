@@ -25,7 +25,7 @@ export class ReportingComponent {
     reportTypes = [
         { id: 'shift_diary_pdf', name: 'Shift Diary Report (PDF)' },
         { id: 'dr_issue_pdf', name: 'DR Issue Summary (PDF)' },
-        { id: 'maintenance_docx', name: 'Maintenance Summary (DOCX)' },
+        { id: 'maintenance_docx', name: 'Defect Management Summary (DOCX)' },
         { id: 'parts_pdf', name: 'Parts Inventory Snapshot (PDF)' }
     ];
 
@@ -114,7 +114,7 @@ export class ReportingComponent {
 
         doc.setFontSize(16);
         doc.setTextColor(100);
-        doc.text('Simulator Maintenance Report', 14, 35);
+        doc.text('Simulator Defect Management Report', 14, 35);
 
         // Details
         doc.setFontSize(12);
@@ -191,7 +191,7 @@ export class ReportingComponent {
                     }),
                     new Paragraph({
                         children: [
-                            new TextRun({ text: "Maintenance Summary Report", size: 32, color: "555555" }),
+                            new TextRun({ text: "Defect Management Summary Report", size: 32, color: "555555" }),
                         ],
                     }),
                     new Paragraph({ text: "" }),

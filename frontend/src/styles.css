@@ -354,3 +354,264 @@ body.light-theme select.bg-dark option {
     background-color: #ffffff !important;
     color: #1e293b !important;
 }
+
+/* ======================================================
+   GLOBAL UTILITY CLASSES
+   Used across multiple components — defined once here.
+   ====================================================== */
+
+/* Form field label */
+.detail-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+/* Pill-shaped button modifier */
+.btn-pill {
+    border-radius: 50rem !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.55rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Secondary/ghost action button */
+.btn-outline-darker {
+    background-color: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-darker:hover {
+    background-color: rgba(148, 163, 184, 0.08);
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+.btn-outline-darker:disabled,
+.btn-outline-darker[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* KPI / stat number display */
+.kpi-display {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: #f8fafc;
+}
+
+/* Small text utility (0.8rem) */
+.fs-7 {
+    font-size: 0.8rem !important;
+}
+
+/* Tracking utilities */
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.15em;
+}
+
+/* LIGHT THEME overrides for global utilities */
+body.light-theme .detail-label {
+    color: #64748b;
+}
+
+body.light-theme .btn-outline-darker {
+    border-color: #cbd5e1;
+    color: #64748b;
+}
+
+body.light-theme .btn-outline-darker:hover {
+    background-color: rgba(100, 116, 139, 0.08);
+    border-color: #94a3b8;
+    color: #334155;
+}
+
+body.light-theme .kpi-display {
+    color: #1e293b;
+}
+
+/* ======================================================
+   PAGE LAYOUT SYSTEM — consistent header & cards
+   ====================================================== */
+
+.av-page {
+    padding: 24px;
+}
+
+/* Page header card */
+.page-header {
+    background: #1e2638;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.page-eyebrow {
+    font-size: 12px;
+    color: #3b82f6;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 6px;
+}
+
+.page-title {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 26px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.2;
+}
+
+.page-title i { color: #3b82f6; }
+
+.page-subtitle {
+    margin: 6px 0 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.page-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* Summary stat cards */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    background: #1e2638;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    display: block;
+}
+
+.stat-value {
+    display: block;
+    margin-top: 8px;
+    color: #f8fafc;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.stat-sub {
+    display: block;
+    margin-top: 6px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* Content section card */
+.content-card {
+    background: #1e2638;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.content-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-card-title {
+    margin: 0;
+    color: #3b82f6;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+/* Light theme overrides for page layout system */
+body.light-theme .page-header {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+body.light-theme .page-title { color: #0f172a; }
+body.light-theme .page-subtitle { color: #64748b; }
+
+body.light-theme .stat-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
+}
+
+body.light-theme .stat-value { color: #0f172a; }
+body.light-theme .stat-label { color: #64748b; }
+body.light-theme .stat-sub { color: #64748b; }
+
+body.light-theme .content-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.05);
+}
+
+body.light-theme .content-card-header {
+    border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .content-card-title { color: #4f46e5; }
+
+/* Stat card icon badge — used on all pages for colored icon in top-right of stat cards */
+.sc-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}

@@ -8,125 +8,165 @@
             <span class="ms-2 fs-5 tracking-wide sidebar-text">AVIO TRAINING</span>
         </div>
         <div class="list-group list-group-flush mt-2 border-0 px-3 pb-5">
-            <div class="sidebar-label mt-3 mb-2 px-3 text-uppercase fw-bold"
-                style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
-                Main
-            </div>
 
-            <!-- Dashboard -->
-            <a routerLink="/app/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
-                (click)="closeSidebarOnMobile()">
-                <i class="bi bi-grid-1x2-fill fs-5 pe-3 sidebar-icon"></i>
-                <span class="fw-semibold sidebar-text">Dashboard</span>
-            </a>
+            <!-- ── Staff / Admin navigation ─────────────────────────────── -->
+            <ng-container *ngIf="!isInstructor">
 
-            <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
-                style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
-                Operations
-            </div>
-
-            <!-- Maintenance Section -->
-            <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
-                [class.active-menu]="isRouteActive('/app/maintenance')" (click)="toggleMenu('maintenance')"
-                style="cursor: pointer;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-tools fs-5 pe-3 sidebar-icon"></i>
-                    <span class="fw-semibold sidebar-text">Maintenance</span>
+                <div class="sidebar-label mt-3 mb-2 px-3 text-uppercase fw-bold"
+                    style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                    Main
                 </div>
-                <i class="bi sidebar-caret"
-                    [ngClass]="activeMenus['maintenance'] ? 'bi-chevron-down' : 'bi-chevron-right'"
-                    style="font-size: 0.8rem; opacity: 0.7;"></i>
-            </a>
-            <div class="submenu overflow-hidden" *ngIf="activeMenus['maintenance']">
-                <a routerLink="/app/maintenance/cases" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
-                    (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Case Registry</span>
-                </a>
-            </div>
 
-            <!-- Parts Section -->
-            <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
-                [class.active-menu]="isRouteActive('/app/parts')" (click)="toggleMenu('parts')"
-                style="cursor: pointer;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-boxes fs-5 pe-3 sidebar-icon"></i>
-                    <span class="fw-semibold sidebar-text">Parts & Inventory</span>
-                </div>
-                <i class="bi sidebar-caret" [ngClass]="activeMenus['parts'] ? 'bi-chevron-down' : 'bi-chevron-right'"
-                    style="font-size: 0.8rem; opacity: 0.7;"></i>
-            </a>
-            <div class="submenu overflow-hidden" *ngIf="activeMenus['parts']">
-                <a routerLink="/app/parts/inventory" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                <!-- Dashboard -->
+                <a routerLink="/app/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
                     (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Inventory Data</span>
+                    <i class="bi bi-grid-1x2-fill fs-5 pe-3 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Dashboard</span>
                 </a>
-                <a routerLink="/app/parts/document-library" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
-                    (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Docs Library</span>
-                </a>
-            </div>
 
-            <!-- Logbook Section -->
-            <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
-                [class.active-menu]="isRouteActive('/app/logbook')" (click)="toggleMenu('logbook')"
-                style="cursor: pointer;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-journal-text fs-5 pe-3 sidebar-icon"></i>
-                    <span class="fw-semibold sidebar-text">Logbook</span>
+                <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
+                    style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                    Operations
                 </div>
-                <i class="bi sidebar-caret" [ngClass]="activeMenus['logbook'] ? 'bi-chevron-down' : 'bi-chevron-right'"
-                    style="font-size: 0.8rem; opacity: 0.7;"></i>
-            </a>
-            <div class="submenu overflow-hidden" *ngIf="activeMenus['logbook']">
-                <a routerLink="/app/logbook/shift-diary" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
-                    (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Shift Diary</span>
+
+                <!-- Defect Management Section -->
+                <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
+                    [class.active-menu]="isRouteActive('/app/maintenance')" (click)="toggleMenu('maintenance')"
+                    style="cursor: pointer;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-tools fs-5 pe-3 sidebar-icon"></i>
+                        <span class="fw-semibold sidebar-text">Defect Management</span>
+                    </div>
+                    <i class="bi sidebar-caret"
+                        [ngClass]="activeMenus['maintenance'] ? 'bi-chevron-down' : 'bi-chevron-right'"
+                        style="font-size: 0.8rem; opacity: 0.7;"></i>
                 </a>
+                <div class="submenu overflow-hidden" *ngIf="activeMenus['maintenance']">
+                    <a routerLink="/app/maintenance/cases" routerLinkActive="active"
+                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                        (click)="closeSidebarOnMobile()">
+                        <span class="submenu-bullet me-3"></span>
+                        <span class="fw-medium sidebar-text">Case Registry</span>
+                    </a>
+                </div>
+
+                <!-- Spare Parts Inventory Section -->
+                <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
+                    [class.active-menu]="isRouteActive('/app/parts')" (click)="toggleMenu('parts')"
+                    style="cursor: pointer;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-boxes fs-5 pe-3 sidebar-icon"></i>
+                        <span class="fw-semibold sidebar-text">Spare Parts Inventory</span>
+                    </div>
+                    <i class="bi sidebar-caret" [ngClass]="activeMenus['parts'] ? 'bi-chevron-down' : 'bi-chevron-right'"
+                        style="font-size: 0.8rem; opacity: 0.7;"></i>
+                </a>
+                <div class="submenu overflow-hidden" *ngIf="activeMenus['parts']">
+                    <a routerLink="/app/parts/inventory" routerLinkActive="active"
+                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                        (click)="closeSidebarOnMobile()">
+                        <span class="submenu-bullet me-3"></span>
+                        <span class="fw-medium sidebar-text">Inventory Data</span>
+                    </a>
+                </div>
+
+                <!-- Engineers Shifts (top-level) -->
                 <a routerLink="/app/logbook/shifts" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
                     (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Engineers Shifts</span>
+                    <i class="bi bi-calendar3 fs-5 pe-3 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Engineers Shifts</span>
                 </a>
-                <a routerLink="/app/logbook/dr-issue-tracker" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+
+                <!-- Logbook Section -->
+                <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
+                    [class.active-menu]="isRouteActive('/app/logbook') && !isRouteActive('/app/logbook/shifts')" (click)="toggleMenu('logbook')"
+                    style="cursor: pointer;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-journal-text fs-5 pe-3 sidebar-icon"></i>
+                        <span class="fw-semibold sidebar-text">Logbook</span>
+                    </div>
+                    <i class="bi sidebar-caret" [ngClass]="activeMenus['logbook'] ? 'bi-chevron-down' : 'bi-chevron-right'"
+                        style="font-size: 0.8rem; opacity: 0.7;"></i>
+                </a>
+                <div class="submenu overflow-hidden" *ngIf="activeMenus['logbook']">
+                    <a routerLink="/app/logbook/shift-diary" routerLinkActive="active"
+                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                        (click)="closeSidebarOnMobile()">
+                        <span class="submenu-bullet me-3"></span>
+                        <span class="fw-medium sidebar-text">Shift Diary</span>
+                    </a>
+                    <a routerLink="/app/logbook/time-logs" routerLinkActive="active"
+                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                        (click)="closeSidebarOnMobile()">
+                        <span class="submenu-bullet me-3"></span>
+                        <span class="fw-medium sidebar-text">Simulator Time Log</span>
+                    </a>
+                </div>
+
+                <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
+                    style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                    Analytics
+                </div>
+
+                <!-- Reporting -->
+                <a routerLink="/app/reporting" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
                     (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">DR Issue Tracker</span>
+                    <i class="bi bi-graph-up pe-3 fs-5 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Reporting</span>
                 </a>
+
+                <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
+                    style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                    Analytics Documentation
+                </div>
+
+                <!-- Docs Library -->
+                <a routerLink="/app/parts/document-library" routerLinkActive="active"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
+                    (click)="closeSidebarOnMobile()">
+                    <i class="bi bi-file-earmark-text fs-5 pe-3 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Docs Library</span>
+                </a>
+
+                <!-- Admin-only section -->
+                <ng-container *ngIf="isAdmin">
+                    <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
+                        style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                        Administration
+                    </div>
+                    <a routerLink="/app/admin/role-management" routerLinkActive="active"
+                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
+                        (click)="closeSidebarOnMobile()">
+                        <i class="bi bi-shield-lock fs-5 pe-3 sidebar-icon"></i>
+                        <span class="fw-semibold sidebar-text">Role Management</span>
+                    </a>
+                </ng-container>
+
+            </ng-container>
+
+            <!-- ── Instructor-only navigation ────────────────────────────── -->
+            <ng-container *ngIf="isInstructor">
+
+                <div class="sidebar-label mt-3 mb-2 px-3 text-uppercase fw-bold"
+                    style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
+                    Training
+                </div>
+
                 <a routerLink="/app/logbook/time-logs" routerLinkActive="active"
-                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
                     (click)="closeSidebarOnMobile()">
-                    <span class="submenu-bullet me-3"></span>
-                    <span class="fw-medium sidebar-text">Simulator Time Log</span>
+                    <i class="bi bi-clock-history fs-5 pe-3 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Simulator Time Log</span>
                 </a>
-            </div>
 
-            <div class="sidebar-label mt-4 mb-2 px-3 text-uppercase fw-bold"
-                style="font-size: 0.7rem; color: #475569; letter-spacing: 0.1em;">
-                Analytics
-            </div>
+            </ng-container>
 
-            <!-- Reporting -->
-            <a routerLink="/app/reporting" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
-                (click)="closeSidebarOnMobile()">
-                <i class="bi bi-graph-up pe-3 fs-5 sidebar-icon"></i>
-                <span class="fw-semibold sidebar-text">Reporting</span>
-            </a>
         </div>
     </div>
 
-    <!-- Page Content -->
     <!-- Page Content -->
     <div id="page-content-wrapper" class="w-100"
         style="background-color: #1a1e2d; min-height: 100vh; overflow-x: hidden;">
@@ -168,7 +208,7 @@
                         id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span
                             class="text-white border border-secondary rounded-circle d-inline-flex justify-content-center align-items-center me-2 shadow-sm"
-                            style="width: 38px; height: 38px; font-size: 0.9rem; background-color: #1f2937;">
+                            style="width: 38px; height: 38px; font-size: 0.9rem; background: linear-gradient(135deg, #4f46e5, #3b82f6);">
                             {{ currentUser?.name?.charAt(0) || 'U' }}
                         </span>
                         <div class="d-none d-lg-block me-1 text-start">
@@ -181,7 +221,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 custom-card-shadow"
                         aria-labelledby="navbarDropdown"
-                        style="min-width: 220px; border-radius: 0.75rem; background-color: #1f2937;">
+                        style="min-width: 220px; border-radius: 0.75rem; background-color: #1e2638; border: 1px solid rgba(255,255,255,0.05) !important;">
                         <li class="px-3 py-2 border-bottom mb-1"
                             style="border-color: rgba(255,255,255,0.1) !important;">
                             <span class="d-block fw-bold text-white">{{ currentUser?.name || 'Systems User' }}</span>
@@ -205,7 +245,7 @@
         </nav>
 
         <!-- Content Router Outlet -->
-        <div class="p-3" style="height: calc(100vh - 72px); overflow-y: auto;">
+        <div style="height: calc(100vh - 72px); overflow-y: auto;">
             <router-outlet></router-outlet>
         </div>
     </div>
