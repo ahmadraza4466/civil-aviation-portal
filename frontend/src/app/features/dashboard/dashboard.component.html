@@ -19,7 +19,10 @@
 
     <!-- KPI Stats -->
     <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
-        <div class="stat-card">
+
+        <!-- Open Snags — clickable filter -->
+        <div class="stat-card card-btn" [class.card-active-red]="selectedCardStatus === 'Open'"
+            (click)="filterByCard('Open')" title="Filter: Open snags only">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Open Snags</span>
                 <div class="sc-stat-icon" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.2);">
@@ -31,7 +34,14 @@
             </strong>
             <small class="stat-sub">Awaiting action</small>
         </div>
-        <div class="stat-card" style="background:linear-gradient(135deg,#4f46e5 0%,#3b82f6 100%);border-color:rgba(59,130,246,0.35);">
+
+        <!-- Pending Maint — clickable filter -->
+        <div class="stat-card card-btn"
+            [class.card-active-indigo]="selectedCardStatus === 'In Progress'"
+            (click)="filterByCard('In Progress')"
+            title="Filter: Pending maintenance only"
+            [style.background]="selectedCardStatus !== 'In Progress' ? 'linear-gradient(135deg,#4f46e5 0%,#3b82f6 100%)' : ''"
+            [style.border-color]="selectedCardStatus !== 'In Progress' ? 'rgba(59,130,246,0.35)' : ''">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label" style="color:rgba(255,255,255,0.7);">Pending Maint</span>
                 <div class="sc-stat-icon" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);">
@@ -43,6 +53,8 @@
             </strong>
             <small class="stat-sub" style="color:rgba(255,255,255,0.6);">Scheduled tasks</small>
         </div>
+
+        <!-- Sim Uptime — informational only -->
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Sim Uptime</span>
@@ -55,6 +67,8 @@
             </strong>
             <small class="stat-sub">Operational rate</small>
         </div>
+
+        <!-- Active Sessions — informational only -->
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Active Sessions</span>
@@ -65,6 +79,7 @@
             <strong class="stat-value" style="color:#06b6d4;">04</strong>
             <small class="stat-sub">Running now</small>
         </div>
+
     </div>
 
     <!-- Charts Row -->
@@ -94,7 +109,14 @@
     <!-- Recent Snag Registry -->
     <div class="content-card">
         <div class="content-card-header">
-            <h6 class="content-card-title"><i class="bi bi-list-task me-2"></i>Recent Snag Registry</h6>
+            <h6 class="content-card-title">
+                <i class="bi bi-list-task me-2"></i>
+                {{ selectedCardStatus === 'Open' ? 'Open Snags' : selectedCardStatus === 'In Progress' ? 'Pending Maintenance' : 'Recent Snag Registry' }}
+            </h6>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+            <button *ngIf="selectedCardStatus" class="btn btn-sm btn-outline-darker rounded-pill px-3" style="font-size:11px;" (click)="filterByCard('')">
+                <i class="bi bi-x me-1"></i>Clear filter
+            </button>
             <form [formGroup]="filterForm" class="d-flex flex-wrap gap-2 align-items-center">
                 <div style="width: 170px;">
                     <select class="form-select custom-dark-input shadow-none" formControlName="device" style="font-size: 0.82rem; padding: 0.4rem 0.75rem;">
@@ -112,6 +134,7 @@
                     <input type="date" formControlName="date" class="form-control custom-dark-input shadow-none" style="font-size: 0.82rem; padding: 0.4rem 0.75rem;">
                 </div>
             </form>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-dark-custom mb-0">

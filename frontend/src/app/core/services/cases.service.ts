@@ -85,7 +85,7 @@ export class CasesService {
             actions: updatedCase.actions
         };
 
-        return this.apiService.put<{ success: boolean }>(`/cases/${updatedCase.id}`, payload).pipe(
+        return this.apiService.patch<{ success: boolean }>(`/cases/${updatedCase.id}`, payload).pipe(
             tap(res => {
                 if (res && res.success) {
                     this.fetchCases(); // Refresh

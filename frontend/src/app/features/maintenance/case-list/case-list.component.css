@@ -1,0 +1,144 @@
+/* ── Stat card grid ────────────────────────────────────── */
+.cl-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* ── Clickable stat card ────────────────────────────────── */
+.cl-stat-btn {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    user-select: none;
+}
+
+.cl-stat-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* ── Active card highlight (one per accent colour) ─────── */
+.cl-active-blue {
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18), 0 10px 24px rgba(59, 130, 246, 0.14) !important;
+    background: linear-gradient(140deg, rgba(59, 130, 246, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.cl-active-red {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.18), 0 10px 24px rgba(239, 68, 68, 0.12) !important;
+    background: linear-gradient(140deg, rgba(239, 68, 68, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.cl-active-amber {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18), 0 10px 24px rgba(245, 158, 11, 0.12) !important;
+    background: linear-gradient(140deg, rgba(245, 158, 11, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.cl-active-green {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18), 0 10px 24px rgba(16, 185, 129, 0.12) !important;
+    background: linear-gradient(140deg, rgba(16, 185, 129, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.cl-active-slate {
+    border-color: rgba(100, 116, 139, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.18), 0 10px 24px rgba(100, 116, 139, 0.12) !important;
+    background: linear-gradient(140deg, rgba(100, 116, 139, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.cl-active-cyan {
+    border-color: rgba(6, 182, 212, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.18), 0 10px 24px rgba(6, 182, 212, 0.12) !important;
+    background: linear-gradient(140deg, rgba(6, 182, 212, 0.08) 0%, #1e2638 100%) !important;
+}
+
+/* ── Active filter badge (in header) ───────────────────── */
+.cl-filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 50rem;
+    font-size: 11px;
+    font-weight: 700;
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.cl-filter-badge:hover {
+    background: rgba(59, 130, 246, 0.18);
+}
+
+/* ── Dropdown menu dark ─────────────────────────────────── */
+.cl-dropdown-menu {
+    background-color: #1e2638;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+    min-width: 180px;
+}
+
+/* ── Responsive: tablet (≤ 900px) → 3 columns ─────────── */
+@media (max-width: 900px) {
+    .cl-stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ── Responsive: mobile (≤ 575px) → 2 columns ─────────── */
+@media (max-width: 575px) {
+    .cl-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .cl-btn-label {
+        display: none;
+    }
+
+    .stat-value {
+        font-size: 24px !important;
+    }
+}
+
+/* ── Light-theme overrides ──────────────────────────────── */
+:host-context(body.light-theme) .cl-active-blue {
+    background: linear-gradient(140deg, rgba(59, 130, 246, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-active-red {
+    background: linear-gradient(140deg, rgba(239, 68, 68, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-active-amber {
+    background: linear-gradient(140deg, rgba(245, 158, 11, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-active-green {
+    background: linear-gradient(140deg, rgba(16, 185, 129, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-active-slate {
+    background: linear-gradient(140deg, rgba(100, 116, 139, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-active-cyan {
+    background: linear-gradient(140deg, rgba(6, 182, 212, 0.06) 0%, #ffffff 100%) !important;
+}
+
+:host-context(body.light-theme) .cl-filter-badge {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+:host-context(body.light-theme) .cl-dropdown-menu {
+    background-color: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}

@@ -22,42 +22,42 @@
             <form [formGroup]="snagForm">
                 <!-- First Row -->
                 <div class="row g-3 mb-4">
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">FFS device:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="ffsDevice">
                             <option *ngFor="let device of devices" [value]="device.name">{{ device.name }}</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">Date:</label>
                         <input type="date" class="form-control form-control-sm custom-dark-input"
                             formControlName="date">
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">Sequence no:</label>
                         <input type="text" class="form-control form-control-sm custom-dark-input"
                             formControlName="sequenceNo" readonly>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">Status:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="status">
                             <option *ngFor="let status of statuses" [value]="status.name">{{ status.name }}</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">ATA no:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="ataNo">
                             <option *ngFor="let ata of ataNos" [value]="ata.code + '-' + ata.description">{{ ata.code }}
                                 - {{ ata.description }}</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">Position:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="position">
                             <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-4 col-xl">
                         <label class="form-label detail-label">Unit:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="unit">
                             <option *ngFor="let u of units" [value]="u">{{ u }}</option>
@@ -67,24 +67,24 @@
 
                 <!-- Second Row -->
                 <div class="row g-3 mb-4">
-                    <div class="col">
+                    <div class="col-6 col-md">
                         <label class="form-label detail-label">Configuration:</label>
                         <input type="text" class="form-control form-control-sm custom-dark-input" readonly>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-md">
                         <label class="form-label detail-label">Tracking no:</label>
                         <input type="text" class="form-control form-control-sm custom-dark-input">
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-md">
                         <label class="form-label detail-label">Manufacturer ref:</label>
                         <input type="text" class="form-control form-control-sm custom-dark-input">
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-md">
                         <label class="form-label detail-label">Order no:</label>
                         <input type="text" class="form-control form-control-sm custom-dark-input"
                             formControlName="orderNo">
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-md">
                         <label class="form-label detail-label text-warning">Assigned To:</label>
                         <select class="form-select form-select-sm custom-dark-input" formControlName="assignee">
                             <option *ngFor="let eng of engineers" [value]="eng">{{ eng }}</option>

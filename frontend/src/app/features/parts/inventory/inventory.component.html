@@ -8,24 +8,21 @@
             <p class="page-subtitle">Track, manage, and audit simulator spare parts stock</p>
         </div>
         <div class="page-header-actions">
+            <div *ngIf="selectedStatus" class="cl-filter-badge" (click)="filterByStatus('')"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:50rem;font-size:11px;font-weight:700;color:#3b82f6;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);cursor:pointer;">
+                <i class="bi bi-funnel-fill"></i>{{ selectedStatus }}<i class="bi bi-x-lg ms-1" style="font-size:9px;"></i>
+            </div>
             <div class="dropdown">
                 <button class="btn btn-outline-darker btn-pill dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-funnel me-1"></i>{{ selectedDevice || 'All Systems' }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end"
-                    style="background-color: #1e2638; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.75rem; min-width: 190px;">
-                    <li>
-                        <a class="dropdown-item text-secondary py-2" href="javascript:void(0)" (click)="filterByDevice('')">
-                            <i class="bi bi-grid me-2 opacity-50"></i>All Systems
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider my-1" style="border-color: rgba(255,255,255,0.08);"></li>
+                    style="background-color:#1e2638;border:1px solid rgba(255,255,255,0.08);border-radius:0.75rem;min-width:190px;">
+                    <li><a class="dropdown-item text-secondary py-2" href="javascript:void(0)" (click)="filterByDevice('')"><i class="bi bi-grid me-2 opacity-50"></i>All Systems</a></li>
+                    <li><hr class="dropdown-divider my-1" style="border-color:rgba(255,255,255,0.08);"></li>
                     <li *ngFor="let device of deviceOptions">
-                        <a class="dropdown-item py-2"
-                            [class.text-info]="selectedDevice === device"
-                            [class.text-light]="selectedDevice !== device"
-                            href="javascript:void(0)" (click)="filterByDevice(device)">
+                        <a class="dropdown-item py-2" [class.text-info]="selectedDevice === device" [class.text-light]="selectedDevice !== device" href="javascript:void(0)" (click)="filterByDevice(device)">
                             <i class="bi bi-check2 me-2" [style.visibility]="selectedDevice === device ? 'visible' : 'hidden'"></i>{{ device }}
                         </a>
                     </li>
@@ -37,9 +34,11 @@
         </div>
     </div>
 
-    <!-- Stats -->
+    <!-- Clickable Stats -->
     <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="stat-card">
+
+        <!-- Total Parts -->
+        <div class="stat-card card-btn" [class.card-active-blue]="selectedStatus === ''" (click)="filterByStatus('')" title="Show all parts">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Total Parts</span>
                 <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
@@ -49,7 +48,9 @@
             <strong class="stat-value" style="color:#3b82f6;">{{ totalParts }}</strong>
             <small class="stat-sub">In catalogue</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Low Stock -->
+        <div class="stat-card card-btn" [class.card-active-amber]="selectedStatus === 'Low Stock'" (click)="filterByStatus('Low Stock')" title="Filter by Low Stock">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Low Stock</span>
                 <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
@@ -59,7 +60,9 @@
             <strong class="stat-value" style="color:#f59e0b;">{{ lowStockCount }}</strong>
             <small class="stat-sub">Below threshold</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Out of Stock -->
+        <div class="stat-card card-btn" [class.card-active-red]="selectedStatus === 'Out of Stock'" (click)="filterByStatus('Out of Stock')" title="Filter by Out of Stock">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Out of Stock</span>
                 <div class="sc-stat-icon" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.2);">
@@ -69,12 +72,22 @@
             <strong class="stat-value" style="color:#ef4444;">{{ outOfStockCount }}</strong>
             <small class="stat-sub">Needs replenishment</small>
         </div>
+
     </div>
 
     <!-- Table Card -->
     <div class="content-card">
         <div class="content-card-header">
-            <h6 class="content-card-title"><i class="bi bi-list-check me-2"></i>Spare Parts List</h6>
+            <h6 class="content-card-title">
+                <i class="bi bi-list-check me-2"></i>
+                {{ selectedStatus ? selectedStatus + ' Parts' : 'All Spare Parts' }}
+            </h6>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary" style="font-size:12px;">{{ filteredParts.length }} item{{ filteredParts.length !== 1 ? 's' : '' }}</span>
+                <button *ngIf="selectedStatus" class="btn btn-sm btn-outline-darker rounded-pill px-3" style="font-size:11px;" (click)="filterByStatus('')">
+                    <i class="bi bi-x me-1"></i>Clear
+                </button>
+            </div>
         </div>
         <app-reusable-table [columns]="tableColumns" [data]="filteredParts" [itemsPerPage]="10"
             (view)="onViewHistory($event)" (edit)="onEdit($event)" (delete)="onDelete($event)">

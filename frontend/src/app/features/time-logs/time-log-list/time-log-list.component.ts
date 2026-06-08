@@ -12,7 +12,10 @@ import Swal from 'sweetalert2';
     templateUrl: './time-log-list.component.html'
 })
 export class TimeLogListComponent implements OnInit {
-    logs: TimeLog[] = [];
+    allLogs: any[] = [];   // source of truth for counts
+    filteredLogs: any[] = []; // what the table shows
+    selectedFilter = ''; // '' | 'Yes' | 'No'
+
     timeLogsService = inject(TimeLogsService);
     router = inject(Router);
 
@@ -25,42 +28,39 @@ export class TimeLogListComponent implements OnInit {
         { key: 'includeInSnag', header: 'In Snag?' }
     ];
 
+    get totalCount(): number { return this.allLogs.length; }
+    get snagLinkedCount(): number { return this.allLogs.filter((l: any) => l.includeInSnag === 'Yes').length; }
+    get cleanSessionCount(): number { return this.allLogs.length - this.snagLinkedCount; }
+
     ngOnInit() {
         this.timeLogsService.fetchTimeLogs();
         this.timeLogsService.timeLogs$.subscribe(data => {
-            this.logs = data.map(item => ({
+            this.allLogs = data.map(item => ({
                 ...item,
                 includeInSnag: item.includeInSnag ? 'Yes' : 'No'
             })) as any;
+            this.applyFilter();
         });
     }
 
-    get snagLinkedCount(): number {
-        return this.logs.filter((l: any) => l.includeInSnag === 'Yes').length;
+    filterByCard(filter: string) {
+        // Toggle: clicking same card again clears filter (Total always resets)
+        this.selectedFilter = filter === '' || this.selectedFilter === filter ? '' : filter;
+        this.applyFilter();
     }
 
-    get cleanSessionCount(): number {
-        return this.logs.length - this.snagLinkedCount;
+    private applyFilter() {
+        this.filteredLogs = this.selectedFilter
+            ? this.allLogs.filter((l: any) => l.includeInSnag === this.selectedFilter)
+            : [...this.allLogs];
     }
 
-    onAdd() {
-        this.router.navigate(['/app/logbook/time-logs/new']);
-    }
+    onAdd() { this.router.navigate(['/app/logbook/time-logs/new']); }
 
-    onEdit(item: any) {
-        this.router.navigate(['/app/logbook/time-logs/edit'], { queryParams: { id: item.id } });
-    }
+    onEdit(item: any) { this.router.navigate(['/app/logbook/time-logs/edit'], { queryParams: { id: item.id } }); }
 
     onDelete(item: any) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this delete!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
+        Swal.fire({ title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it!' }).then((result) => {
             if (result.isConfirmed) {
                 this.timeLogsService.deleteTimeLog(item.id).subscribe(() => {
                     Swal.fire('Deleted!', 'The time log has been deleted.', 'success');

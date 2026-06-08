@@ -8,19 +8,25 @@
             <p class="page-subtitle">Log, track, and resolve simulator defect cases</p>
         </div>
         <div class="page-header-actions">
+            <!-- Active filter badge -->
+            <div *ngIf="selectedStatus" class="cl-filter-badge" (click)="filterByStatus('')">
+                <i class="bi bi-funnel-fill"></i>
+                {{ selectedStatus }}
+                <i class="bi bi-x-lg ms-1" style="font-size:9px;"></i>
+            </div>
+            <!-- Device filter dropdown -->
             <div class="dropdown">
                 <button class="btn btn-outline-darker btn-pill dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-funnel me-1"></i>{{ selectedDevice || 'All Devices' }}
+                    <i class="bi bi-hdd-stack me-1"></i>{{ selectedDevice || 'All Devices' }}
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end"
-                    style="background-color: #1e2638; border: 1px solid rgba(255,255,255,0.08); border-radius: 0.75rem; min-width: 170px;">
+                <ul class="dropdown-menu dropdown-menu-end cl-dropdown-menu">
                     <li>
                         <a class="dropdown-item text-secondary py-2" href="javascript:void(0)" (click)="filterByDevice('')">
                             <i class="bi bi-grid me-2 opacity-50"></i>All Devices
                         </a>
                     </li>
-                    <li><hr class="dropdown-divider my-1" style="border-color: rgba(255,255,255,0.08);"></li>
+                    <li><hr class="dropdown-divider my-1" style="border-color:rgba(255,255,255,0.08);"></li>
                     <li *ngFor="let device of deviceOptions">
                         <a class="dropdown-item py-2"
                             [class.text-info]="selectedDevice === device"
@@ -32,14 +38,19 @@
                 </ul>
             </div>
             <button class="btn btn-neon-blue btn-pill px-4" (click)="onAdd()">
-                <i class="bi bi-plus-lg me-1"></i>Enter new case
+                <i class="bi bi-plus-lg me-1"></i><span class="cl-btn-label">Enter new case</span>
             </button>
         </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="stat-card">
+    <!-- Clickable Status Stat Cards -->
+    <div class="cl-stat-grid">
+
+        <!-- Total Cases -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-blue]="selectedStatus === ''"
+             (click)="filterByStatus('')"
+             title="Show all cases">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Total Cases</span>
                 <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
@@ -49,32 +60,97 @@
             <strong class="stat-value" style="color:#3b82f6;">{{ totalCases }}</strong>
             <small class="stat-sub">All records</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Open Cases -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-red]="selectedStatus === 'Open'"
+             (click)="filterByStatus('Open')"
+             title="Filter by Open">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="stat-label">Open Cases</span>
-                <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
-                    <i class="bi bi-exclamation-circle-fill" style="color:#f59e0b;"></i>
+                <span class="stat-label">Open</span>
+                <div class="sc-stat-icon" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.2);">
+                    <i class="bi bi-exclamation-circle-fill" style="color:#ef4444;"></i>
                 </div>
             </div>
-            <strong class="stat-value" style="color:#f59e0b;">{{ openCasesCount }}</strong>
-            <small class="stat-sub">Pending resolution</small>
+            <strong class="stat-value" style="color:#ef4444;">{{ openCount }}</strong>
+            <small class="stat-sub">Needs attention</small>
         </div>
-        <div class="stat-card">
+
+        <!-- In Progress -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-amber]="selectedStatus === 'In Progress'"
+             (click)="filterByStatus('In Progress')"
+             title="Filter by In Progress">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="stat-label">Closed Cases</span>
+                <span class="stat-label">In Progress</span>
+                <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
+                    <i class="bi bi-arrow-repeat" style="color:#f59e0b;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#f59e0b;">{{ inProgressCount }}</strong>
+            <small class="stat-sub">Being worked</small>
+        </div>
+
+        <!-- Closed Cases -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-green]="selectedStatus === 'Closed'"
+             (click)="filterByStatus('Closed')"
+             title="Filter by Closed">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Closed</span>
                 <div class="sc-stat-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.2);">
                     <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
                 </div>
             </div>
-            <strong class="stat-value" style="color:#10b981;">{{ closedCasesCount }}</strong>
+            <strong class="stat-value" style="color:#10b981;">{{ closedCount }}</strong>
             <small class="stat-sub">Resolved</small>
         </div>
+
+        <!-- Deferred -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-slate]="selectedStatus === 'Deferred'"
+             (click)="filterByStatus('Deferred')"
+             title="Filter by Deferred">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Deferred</span>
+                <div class="sc-stat-icon" style="background:rgba(100,116,139,0.12);border-color:rgba(100,116,139,0.2);">
+                    <i class="bi bi-clock-history" style="color:#64748b;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#64748b;">{{ deferredCount }}</strong>
+            <small class="stat-sub">Postponed</small>
+        </div>
+
+        <!-- Monitoring -->
+        <div class="stat-card cl-stat-btn"
+             [class.cl-active-cyan]="selectedStatus === 'Monitoring'"
+             (click)="filterByStatus('Monitoring')"
+             title="Filter by Monitoring">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Monitoring</span>
+                <div class="sc-stat-icon" style="background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.2);">
+                    <i class="bi bi-eye-fill" style="color:#06b6d4;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#06b6d4;">{{ monitoringCount }}</strong>
+            <small class="stat-sub">Under watch</small>
+        </div>
+
     </div>
 
     <!-- Table Card -->
     <div class="content-card">
         <div class="content-card-header">
-            <h6 class="content-card-title"><i class="bi bi-list-check me-2"></i>Snag Case List</h6>
+            <h6 class="content-card-title">
+                <i class="bi bi-list-check me-2"></i>
+                {{ selectedStatus ? selectedStatus + ' Cases' : 'All Snag Cases' }}
+            </h6>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary" style="font-size:12px;">{{ filteredCases.length }} record{{ filteredCases.length !== 1 ? 's' : '' }}</span>
+                <button *ngIf="selectedStatus" class="btn btn-sm btn-outline-darker rounded-pill px-3" style="font-size:11px;" (click)="filterByStatus('')">
+                    <i class="bi bi-x me-1"></i>Clear filter
+                </button>
+            </div>
         </div>
         <app-reusable-table [columns]="tableColumns" [data]="filteredCases" [itemsPerPage]="10"
             (edit)="onEdit($event)" (delete)="onDelete($event)">

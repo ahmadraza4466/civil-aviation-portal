@@ -615,3 +615,125 @@ body.light-theme .content-card-title { color: #4f46e5; }
     font-size: 16px;
     flex-shrink: 0;
 }
+
+/* ======================================================
+   GLOBAL CLICKABLE CARD UTILITIES
+   Reused across all screens for stat-card filter behaviour.
+   ====================================================== */
+
+.card-btn {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    user-select: none;
+}
+
+.card-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.card-active-blue {
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18), 0 10px 24px rgba(59, 130, 246, 0.14) !important;
+    background: linear-gradient(140deg, rgba(59, 130, 246, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.card-active-red {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.18), 0 10px 24px rgba(239, 68, 68, 0.12) !important;
+    background: linear-gradient(140deg, rgba(239, 68, 68, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.card-active-amber {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18), 0 10px 24px rgba(245, 158, 11, 0.12) !important;
+    background: linear-gradient(140deg, rgba(245, 158, 11, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.card-active-green {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18), 0 10px 24px rgba(16, 185, 129, 0.12) !important;
+    background: linear-gradient(140deg, rgba(16, 185, 129, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.card-active-indigo {
+    border-color: rgba(79, 70, 229, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18), 0 10px 24px rgba(79, 70, 229, 0.12) !important;
+    background: linear-gradient(140deg, rgba(79, 70, 229, 0.08) 0%, #1e2638 100%) !important;
+}
+
+.card-active-cyan {
+    border-color: rgba(6, 182, 212, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.18), 0 10px 24px rgba(6, 182, 212, 0.12) !important;
+    background: linear-gradient(140deg, rgba(6, 182, 212, 0.08) 0%, #1e2638 100%) !important;
+}
+
+/* Light-theme overrides */
+body.light-theme .card-active-blue { background: linear-gradient(140deg, rgba(59, 130, 246, 0.06) 0%, #ffffff 100%) !important; }
+body.light-theme .card-active-red { background: linear-gradient(140deg, rgba(239, 68, 68, 0.06) 0%, #ffffff 100%) !important; }
+body.light-theme .card-active-amber { background: linear-gradient(140deg, rgba(245, 158, 11, 0.06) 0%, #ffffff 100%) !important; }
+body.light-theme .card-active-green { background: linear-gradient(140deg, rgba(16, 185, 129, 0.06) 0%, #ffffff 100%) !important; }
+body.light-theme .card-active-indigo { background: linear-gradient(140deg, rgba(79, 70, 229, 0.06) 0%, #ffffff 100%) !important; }
+body.light-theme .card-active-cyan { background: linear-gradient(140deg, rgba(6, 182, 212, 0.06) 0%, #ffffff 100%) !important; }
+
+/* ======================================================
+   GLOBAL RESPONSIVE OVERRIDES
+   ====================================================== */
+
+/* Reduce page padding on mobile */
+@media (max-width: 575px) {
+    .av-page {
+        padding: 12px !important;
+    }
+
+    .page-header {
+        padding: 16px !important;
+        border-radius: 14px !important;
+    }
+
+    .page-title {
+        font-size: 20px !important;
+    }
+
+    .page-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .stat-value {
+        font-size: 24px !important;
+    }
+
+    .content-card-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 576px) and (max-width: 767px) {
+    .av-page {
+        padding: 16px !important;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+/* Ensure tables always scroll horizontally on small screens */
+.content-card .table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Navbar brand — hide subtitle on very small screens */
+@media (max-width: 400px) {
+    .navbar-brand + small {
+        display: none !important;
+    }
+}

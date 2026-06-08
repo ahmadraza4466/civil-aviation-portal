@@ -10,8 +10,7 @@ import Swal from 'sweetalert2';
     templateUrl: './document-library.component.html'
 })
 export class DocumentLibraryComponent {
-    get pdfCount(): number { return this.documents.filter(d => d.type === 'PDF').length; }
-    get docxCount(): number { return this.documents.filter(d => d.type === 'DOCX').length; }
+    selectedType = ''; // '' | 'PDF' | 'DOCX'
 
     documents = [
         { id: 1, name: 'A350 Maintenance Manual Volume 1', type: 'PDF', size: '15 MB', date: '2025-10-15' },
@@ -20,31 +19,29 @@ export class DocumentLibraryComponent {
         { id: 4, name: 'Q1 Compliance Report', type: 'PDF', size: '1.2 MB', date: '2026-03-01' }
     ];
 
+    get pdfCount(): number { return this.documents.filter(d => d.type === 'PDF').length; }
+    get docxCount(): number { return this.documents.filter(d => d.type === 'DOCX').length; }
+
+    get filteredDocuments() {
+        return this.selectedType ? this.documents.filter(d => d.type === this.selectedType) : this.documents;
+    }
+
+    filterByType(type: string) {
+        this.selectedType = type === '' || this.selectedType === type ? '' : type;
+    }
+
     viewDoc(docName: string) {
         Swal.fire({
             title: docName,
-            html: `
-        <div class="text-center p-4">
-          <i class="bi bi-file-earmark-pdf text-danger display-1 mb-3"></i>
-          <p class="text-muted">Previewing document content...</p>
-        </div>
-      `,
+            html: `<div class="text-center p-4"><i class="bi bi-file-earmark-pdf text-danger display-1 mb-3"></i><p class="text-muted">Previewing document content...</p></div>`,
             confirmButtonText: 'Close',
             width: '600px'
         });
     }
 
     downloadDoc(docName: string) {
-        Swal.fire({
-            title: `Download ${docName}?`,
-            text: "This will start downloading the file to your device.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Download',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
+        Swal.fire({ title: `Download ${docName}?`, text: 'This will start downloading the file to your device.', icon: 'question', showCancelButton: true, confirmButtonText: 'Download', cancelButtonText: 'Cancel' }).then((result) => {
             if (result.isConfirmed) {
-                // Mock download logic
                 const blob = new Blob(['Dummy content for testing download.'], { type: 'text/plain' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -52,7 +49,6 @@ export class DocumentLibraryComponent {
                 a.download = docName.replace(/ /g, '_') + '.txt';
                 a.click();
                 window.URL.revokeObjectURL(url);
-
                 Swal.fire('Downloaded!', `${docName} has been downloaded.`, 'success');
             }
         });

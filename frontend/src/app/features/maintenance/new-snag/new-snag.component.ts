@@ -152,7 +152,7 @@ export class NewSnagComponent implements OnInit {
             next: () => {
                 this.isSubmitting = false;
                 Swal.fire('Success', `Snag case ${this.isEditMode ? 'updated' : 'saved'} successfully!`, 'success').then(() => {
-                    this.router.navigate(['/app/dashboard']);
+                    this.router.navigate(['/app/maintenance/cases']);
                 });
             },
             error: () => this.isSubmitting = false

@@ -1,10 +1,10 @@
 export const APP_CONSTANTS = {
     DEVICES: [
-        { id: 'FFS_A320', name: 'A320 Full Flight Simulator' },
-        { id: 'FFS_B737', name: 'B737 Full Flight Simulator' },
-        { id: 'FFS_A330', name: 'A330 Full Flight Simulator' },
-        { id: 'FFS_B777', name: 'B777 Full Flight Simulator' },
-        { id: 'FFS_B787', name: 'B787 Full Flight Simulator' },
+        { id: 'AIRBUS_FFS_A220_1', name: 'Airbus FFS A220 #1' },
+        { id: 'AIRBUS_FFS_A220_2', name: 'Airbus FFS A220 #2' },
+        { id: 'AIRBUS_DT', name: 'Airbus DT' },
+        { id: 'DIAMOND_FNPT', name: 'Diamond FNPT' },
+        { id: 'MPCT', name: 'MPCT' },
     ],
     ATA_CODES: [
         { code: '21', description: 'Air Conditioning' },

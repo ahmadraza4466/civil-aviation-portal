@@ -65,8 +65,10 @@ import { throwError } from 'rxjs';
         </div>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats — Total Shifts / People Scheduled / Vacation Days are clickable filters -->
       <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
+
+        <!-- Month Hours — informational only -->
         <div class="stat-card">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Month Hours</span>
@@ -77,7 +79,12 @@ import { throwError } from 'rxjs';
           <strong class="stat-value" style="color:#06b6d4;">{{ totalScheduledHours }}</strong>
           <small class="stat-sub">Total scheduled hours</small>
         </div>
-        <div class="stat-card">
+
+        <!-- People Scheduled — click to show only engineers with working shifts -->
+        <div class="stat-card card-btn"
+          [class.card-active-indigo]="selectedCardFilter === 'working'"
+          (click)="filterByCard('working')"
+          title="Filter: Engineers with working shifts">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">People Scheduled</span>
             <div class="sc-stat-icon" style="background:rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.2);">
@@ -87,7 +94,12 @@ import { throwError } from 'rxjs';
           <strong class="stat-value" style="color:#4f46e5;">{{ peopleCount }}</strong>
           <small class="stat-sub">Engineers with shifts</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Total Shifts — click to show all (clear type filter) -->
+        <div class="stat-card card-btn"
+          [class.card-active-blue]="selectedCardFilter === ''"
+          (click)="filterByCard('')"
+          title="Show all engineers">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total Shifts</span>
             <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
@@ -97,7 +109,12 @@ import { throwError } from 'rxjs';
           <strong class="stat-value" style="color:#3b82f6;">{{ totalShiftCount }}</strong>
           <small class="stat-sub">Working shift entries</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Vacation Days — click to filter to engineers on vacation -->
+        <div class="stat-card card-btn"
+          [class.card-active-amber]="selectedCardFilter === 'vacation'"
+          (click)="filterByCard('vacation')"
+          title="Filter: Engineers on vacation">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Vacation Days</span>
             <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
@@ -107,6 +124,7 @@ import { throwError } from 'rxjs';
           <strong class="stat-value" style="color:#f59e0b;">{{ vacationDaysCount }}</strong>
           <small class="stat-sub">Annual paid vacation</small>
         </div>
+
       </div>
 
       <!-- Schedule Card -->
@@ -114,7 +132,14 @@ import { throwError } from 'rxjs';
         <div class="content-card-header">
           <div>
             <h6 class="content-card-title">AVIO ENGINEERS SHIFT SCHEDULE</h6>
-            <span class="sc-sub-text">{{ getFilteredEngineers().length }} Members &middot; {{ getMonthName() }} {{ selectedYear }}</span>
+            <span class="sc-sub-text">
+              {{ getFilteredEngineers().length }} Member{{ getFilteredEngineers().length !== 1 ? 's' : '' }}
+              &middot; {{ getMonthName() }} {{ selectedYear }}
+              <span *ngIf="selectedCardFilter" style="margin-left:6px;padding:2px 8px;border-radius:50rem;font-size:10px;background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2);cursor:pointer;" (click)="filterByCard('')">
+                {{ selectedCardFilter === 'vacation' ? 'On Vacation' : 'With Shifts' }}
+                <i class="bi bi-x ms-1" style="font-size:9px;"></i>
+              </span>
+            </span>
           </div>
           <div class="sc-card-header-right">
             <div class="legend">
@@ -801,6 +826,7 @@ export class ShiftScheduleComponent implements OnInit {
   selectedYear = 2026;
 
   filterEngineerId = '';
+  selectedCardFilter = ''; // '' | 'working' | 'vacation'
 
   isModalOpen = false;
   isEditing = false;
@@ -839,6 +865,10 @@ export class ShiftScheduleComponent implements OnInit {
       hours: [8, [Validators.required, Validators.min(0)]],
       notes: ['']
     });
+  }
+
+  filterByCard(filter: string) {
+    this.selectedCardFilter = filter === '' || this.selectedCardFilter === filter ? '' : filter;
   }
 
   selectEngineer(id: string) {
@@ -1004,8 +1034,21 @@ export class ShiftScheduleComponent implements OnInit {
     this.generateCalendarDays(); this.loadShifts();
   }
 
-  getFilteredEngineers() {
-    return this.filterEngineerId ? this.engineers.filter(e => e._id === this.filterEngineerId) : this.engineers;
+  getFilteredEngineers(): User[] {
+    let result = this.filterEngineerId
+      ? this.engineers.filter(e => e._id === this.filterEngineerId)
+      : [...this.engineers];
+
+    if (this.selectedCardFilter === 'working') {
+      result = result.filter(eng =>
+        this.shifts.some(s => s.type !== 'Vacation' && s.type !== 'Off' && this.getShiftEngineerId(s) === eng._id)
+      );
+    } else if (this.selectedCardFilter === 'vacation') {
+      result = result.filter(eng =>
+        this.shifts.some(s => s.type === 'Vacation' && this.getShiftEngineerId(s) === eng._id)
+      );
+    }
+    return result;
   }
 
   getShiftEngineerId(shift: any): string {

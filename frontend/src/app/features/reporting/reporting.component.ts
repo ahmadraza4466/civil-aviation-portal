@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { ReportsService } from '../../core/services/reports.service';
+import { APP_CONSTANTS } from '../../core/constants/app.constants';
 
 @Component({
     selector: 'app-reporting',
@@ -20,7 +21,7 @@ export class ReportingComponent {
     reportsService = inject(ReportsService);
     fb = inject(FormBuilder);
 
-    devices = ['All Devices', 'A220 FFS #2-R', 'B737 FTD', 'A320 FFS', 'A350 FFS'];
+    devices = ['All Devices', ...APP_CONSTANTS.DEVICES.map(d => d.name)];
     statuses = ['All Statuses', 'Open', 'In Progress', 'Deferred', 'Closed'];
     reportTypes = [
         { id: 'shift_diary_pdf', name: 'Shift Diary Report (PDF)' },
@@ -44,6 +45,17 @@ export class ReportingComponent {
     }
 
     downloadHistory: { name: string, date: string, status: string }[] = [];
+    selectedHistoryFilter = ''; // '' | 'success'
+
+    get filteredHistory() {
+        if (this.selectedHistoryFilter === 'success')
+            return this.downloadHistory.filter(h => h.status === 'Downloaded' || h.status === 'Generated');
+        return this.downloadHistory;
+    }
+
+    filterHistory(filter: string) {
+        this.selectedHistoryFilter = filter === '' || this.selectedHistoryFilter === filter ? '' : filter;
+    }
 
     async generateReport() {
         if (this.reportForm.invalid) {

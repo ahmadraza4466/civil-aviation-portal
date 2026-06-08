@@ -7,11 +7,24 @@
             <h1 class="page-title"><i class="bi bi-graph-up"></i>Reporting Center</h1>
             <p class="page-subtitle">Generate and export simulator maintenance reports</p>
         </div>
+        <div class="page-header-actions">
+            <div *ngIf="selectedHistoryFilter"
+                style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:50rem;font-size:11px;font-weight:700;color:#10b981;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);cursor:pointer;"
+                (click)="filterHistory('')">
+                <i class="bi bi-funnel-fill"></i>Successful only
+                <i class="bi bi-x-lg ms-1" style="font-size:9px;"></i>
+            </div>
+        </div>
     </div>
 
-    <!-- Stats -->
+    <!-- Stats — Report Types (clear/all) and Generated Today (success) are clickable -->
     <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="stat-card">
+
+        <!-- Report Types — clicking shows all history (acts as "Total") -->
+        <div class="stat-card card-btn"
+            [class.card-active-blue]="selectedHistoryFilter === ''"
+            (click)="filterHistory('')"
+            title="Show all download history">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Report Types</span>
                 <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
@@ -21,7 +34,12 @@
             <strong class="stat-value" style="color:#3b82f6;">{{ reportTypes.length }}</strong>
             <small class="stat-sub">Available formats</small>
         </div>
-        <div class="stat-card">
+
+        <!-- Generated Today — clicking filters history to successful items -->
+        <div class="stat-card card-btn"
+            [class.card-active-green]="selectedHistoryFilter === 'success'"
+            (click)="filterHistory('success')"
+            title="Filter: Successfully generated reports only">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Generated Today</span>
                 <div class="sc-stat-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.2);">
@@ -31,6 +49,8 @@
             <strong class="stat-value" style="color:#10b981;">{{ downloadHistory.length }}</strong>
             <small class="stat-sub">This session</small>
         </div>
+
+        <!-- Output Formats — informational only -->
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="stat-label">Output Formats</span>
@@ -41,40 +61,43 @@
             <strong class="stat-value" style="color:#4f46e5;">2</strong>
             <small class="stat-sub">PDF &amp; DOCX</small>
         </div>
+
     </div>
 
     <!-- Two-column layout -->
     <div class="row g-3">
+
+        <!-- Left: Report Configuration -->
         <div class="col-lg-8">
             <div class="content-card" style="margin-bottom:0; height:100%;">
                 <div class="content-card-header">
                     <h2 class="content-card-title"><i class="bi bi-filter-circle me-2"></i>Report Configuration</h2>
                 </div>
-                <div class="p-4 p-md-5">
+                <div class="p-4">
                     <form [formGroup]="reportForm" (ngSubmit)="generateReport()">
 
                         <!-- Date Range -->
-                        <div class="row mb-5">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label detail-label">From Date:</label>
+                                <label class="form-label detail-label">From Date</label>
                                 <input type="date" class="form-control custom-dark-input" formControlName="dateFrom">
                             </div>
-                            <div class="col-md-6 mt-4 mt-md-0">
-                                <label class="form-label detail-label">To Date:</label>
+                            <div class="col-md-6">
+                                <label class="form-label detail-label">To Date</label>
                                 <input type="date" class="form-control custom-dark-input" formControlName="dateTo">
                             </div>
                         </div>
 
                         <!-- Selectors -->
-                        <div class="row mb-5">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label detail-label">Device:</label>
+                                <label class="form-label detail-label">Device</label>
                                 <select class="form-select custom-dark-input shadow-none" formControlName="device">
                                     <option *ngFor="let dev of devices" [value]="dev">{{ dev }}</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mt-4 mt-md-0">
-                                <label class="form-label detail-label">Status:</label>
+                            <div class="col-md-6">
+                                <label class="form-label detail-label">Status</label>
                                 <select class="form-select custom-dark-input shadow-none" formControlName="status">
                                     <option *ngFor="let st of statuses" [value]="st">{{ st }}</option>
                                 </select>
@@ -82,21 +105,21 @@
                         </div>
 
                         <!-- Report Type -->
-                        <div class="mb-5">
-                            <label class="form-label detail-label mb-3">Report Format:</label>
-                            <div class="row g-3">
+                        <div class="mb-4">
+                            <label class="form-label detail-label mb-3">Report Format</label>
+                            <div class="row g-2">
                                 <div class="col-12" *ngFor="let type of reportTypes">
                                     <label class="w-100 p-3 rounded"
-                                        style="background-color:rgba(15,23,42,0.4);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.2s;"
-                                        [ngClass]="{'border-primary': reportForm.get('reportType')?.value === type.id}">
+                                        style="background:rgba(15,23,42,0.4);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.2s;"
+                                        [style.border-color]="reportForm.get('reportType')?.value === type.id ? 'rgba(59,130,246,0.6)' : 'rgba(255,255,255,0.05)'">
                                         <div class="d-flex align-items-center">
                                             <input class="form-check-input mt-0 me-3" type="radio"
                                                 formControlName="reportType" [value]="type.id"
-                                                style="background-color:transparent;border-color:rgba(255,255,255,0.2);">
+                                                style="background:transparent;border-color:rgba(255,255,255,0.2);">
                                             <div>
-                                                <span class="fs-6 fw-medium text-white">{{ type.name }}</span>
-                                                <div class="text-secondary small mt-1" style="font-size:0.75rem;">
-                                                    <i class="bi"
+                                                <span class="fw-semibold text-white" style="font-size:13px;">{{ type.name }}</span>
+                                                <div class="text-secondary mt-1" style="font-size:11px;">
+                                                    <i class="bi me-1"
                                                         [ngClass]="type.id.includes('pdf') ? 'bi-file-earmark-pdf text-danger' : 'bi-file-earmark-word text-primary'"></i>
                                                     Generates a downloadable {{ type.id.includes('pdf') ? 'PDF' : 'DOCX' }} file.
                                                 </div>
@@ -107,8 +130,8 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end align-items-center pt-4 border-top"
-                            style="border-color:rgba(255,255,255,0.05) !important;">
+                        <div class="d-flex justify-content-end align-items-center pt-3"
+                            style="border-top:1px solid rgba(255,255,255,0.05);">
                             <button type="submit"
                                 class="btn btn-neon-blue btn-pill px-5 py-2 d-flex align-items-center"
                                 [disabled]="isGenerating">
@@ -117,29 +140,35 @@
                                 Generate Report
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4 mt-3 mt-lg-0">
-            <div class="content-card" style="margin-bottom:0; height:100%;">
-                <div class="content-card-header">
+        <!-- Right: Download History -->
+        <div class="col-lg-4">
+            <div class="content-card" style="margin-bottom:0; height:100%; display:flex; flex-direction:column;">
+                <div class="content-card-header" style="flex-shrink:0;">
                     <h2 class="content-card-title"><i class="bi bi-clock-history me-2"></i>Download History</h2>
-                    <span class="badge d-flex align-items-center justify-content-center"
-                        style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);border-radius:50%;width:26px;height:26px;font-size:11px;">
-                        {{ downloadHistory.length }}
-                    </span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-secondary" style="font-size:12px;">{{ filteredHistory.length }} item{{ filteredHistory.length !== 1 ? 's' : '' }}</span>
+                        <button *ngIf="selectedHistoryFilter" class="btn btn-sm btn-outline-darker rounded-pill px-3" style="font-size:11px;" (click)="filterHistory('')">
+                            <i class="bi bi-x me-1"></i>Clear
+                        </button>
+                    </div>
                 </div>
-                <div class="p-0" style="max-height:600px;overflow-y:auto;">
-                    <div *ngIf="downloadHistory.length > 0; else noHistory">
-                        <div class="px-4 py-3 border-bottom" *ngFor="let item of downloadHistory"
-                            style="border-color:rgba(255,255,255,0.05) !important;">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="fw-semibold text-white" style="font-size:13px;">{{ item.name }}</span>
-                                <small class="text-secondary font-monospace ms-2" style="font-size:0.7rem;white-space:nowrap;">{{ item.date }}</small>
+
+                <!-- History list -->
+                <div style="flex:1;overflow-y:auto;max-height:560px;">
+                    <div *ngIf="filteredHistory.length > 0">
+                        <div class="px-4 py-3" *ngFor="let item of filteredHistory; let last = last"
+                            [style.border-bottom]="!last ? '1px solid rgba(255,255,255,0.05)' : 'none'">
+                            <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                <span class="fw-semibold text-white" style="font-size:13px;line-height:1.3;">{{ item.name }}</span>
+                                <small class="text-secondary flex-shrink-0" style="font-size:10px;font-family:monospace;white-space:nowrap;padding-top:2px;">{{ item.date }}</small>
                             </div>
-                            <span class="badge py-1 px-3"
+                            <span class="badge py-1 px-3 rounded-pill" style="font-size:10px;font-weight:700;"
                                 [ngClass]="item.status === 'Generated' || item.status === 'Downloaded'
                                     ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25'
                                     : item.status === 'Generating...'
@@ -151,15 +180,21 @@
                             </span>
                         </div>
                     </div>
-                    <ng-template #noHistory>
-                        <div class="text-center py-5 px-4 text-secondary d-flex flex-column justify-content-center align-items-center opacity-50">
-                            <i class="bi bi-journal-x mb-4 d-block" style="font-size:2.5rem;"></i>
-                            <p class="mb-0" style="font-size:13px;">No reports generated yet.</p>
-                        </div>
-                    </ng-template>
+
+                    <!-- Empty states -->
+                    <div *ngIf="filteredHistory.length === 0 && downloadHistory.length > 0" class="text-center py-5 px-4">
+                        <i class="bi bi-funnel d-block mb-3 text-secondary" style="font-size:2.2rem;opacity:.35;"></i>
+                        <p class="text-secondary mb-0" style="font-size:13px;">No successful reports in history yet.</p>
+                    </div>
+                    <div *ngIf="downloadHistory.length === 0" class="text-center py-5 px-4">
+                        <i class="bi bi-journal-x d-block mb-3 text-secondary" style="font-size:2.2rem;opacity:.35;"></i>
+                        <p class="text-secondary mb-0" style="font-size:13px;">No reports generated yet.</p>
+                    </div>
                 </div>
+
             </div>
         </div>
+
     </div>
 
 </div>

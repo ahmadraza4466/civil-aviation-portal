@@ -34,27 +34,47 @@ interface RoleDefinition {
         </div>
     </div>
 
-    <!-- Stat Grid -->
+    <!-- Stat Grid — clickable role filters -->
     <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
-        <div class="stat-card">
-            <span class="stat-label">Total Users</span>
-            <span class="stat-value">{{ users.length }}</span>
-            <span class="stat-sub">All accounts</span>
+        <div class="stat-card card-btn" [class.card-active-blue]="selectedRole === ''" (click)="filterByRole('')" title="Show all users">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Total Users</span>
+                <div class="sc-stat-icon" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.2);">
+                    <i class="bi bi-people-fill" style="color:#3b82f6;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#3b82f6;">{{ users.length }}</strong>
+            <small class="stat-sub">All accounts</small>
         </div>
-        <div class="stat-card">
-            <span class="stat-label">Admins</span>
-            <span class="stat-value" style="color: #4f46e5;">{{ countRole('admin') }}</span>
-            <span class="stat-sub">Full access</span>
+        <div class="stat-card card-btn" [class.card-active-indigo]="selectedRole === 'admin'" (click)="filterByRole('admin')" title="Filter: Admins">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Admins</span>
+                <div class="sc-stat-icon" style="background:rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.2);">
+                    <i class="bi bi-shield-fill-check" style="color:#4f46e5;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#4f46e5;">{{ countRole('admin') }}</strong>
+            <small class="stat-sub">Full access</small>
         </div>
-        <div class="stat-card">
-            <span class="stat-label">Engineers</span>
-            <span class="stat-value" style="color: #10b981;">{{ countRole('engineer') }}</span>
-            <span class="stat-sub">Operations</span>
+        <div class="stat-card card-btn" [class.card-active-green]="selectedRole === 'engineer'" (click)="filterByRole('engineer')" title="Filter: Engineers">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Engineers</span>
+                <div class="sc-stat-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.2);">
+                    <i class="bi bi-tools" style="color:#10b981;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#10b981;">{{ countRole('engineer') }}</strong>
+            <small class="stat-sub">Operations</small>
         </div>
-        <div class="stat-card">
-            <span class="stat-label">Instructors</span>
-            <span class="stat-value" style="color: #f59e0b;">{{ countRole('instructor') }}</span>
-            <span class="stat-sub">Training only</span>
+        <div class="stat-card card-btn" [class.card-active-amber]="selectedRole === 'instructor'" (click)="filterByRole('instructor')" title="Filter: Instructors">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-label">Instructors</span>
+                <div class="sc-stat-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.2);">
+                    <i class="bi bi-person-video3" style="color:#f59e0b;"></i>
+                </div>
+            </div>
+            <strong class="stat-value" style="color:#f59e0b;">{{ countRole('instructor') }}</strong>
+            <small class="stat-sub">Training only</small>
         </div>
     </div>
 
@@ -99,8 +119,15 @@ interface RoleDefinition {
     <!-- Users Table -->
     <div class="content-card">
         <div class="content-card-header">
-            <h2 class="content-card-title">User Accounts</h2>
-            <span class="text-secondary" style="font-size: 12px;">{{ users.length }} registered users</span>
+            <h2 class="content-card-title">
+                {{ selectedRole ? (getRoleLabel(selectedRole) + 's') : 'User Accounts' }}
+            </h2>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary" style="font-size:12px;">{{ filteredUsers.length }} user{{ filteredUsers.length !== 1 ? 's' : '' }}</span>
+                <button *ngIf="selectedRole" class="btn btn-sm btn-outline-darker rounded-pill px-3" style="font-size:11px;" (click)="filterByRole('')">
+                    <i class="bi bi-x me-1"></i>Clear
+                </button>
+            </div>
         </div>
 
         <div *ngIf="loading" class="p-5 text-center">
@@ -119,7 +146,7 @@ interface RoleDefinition {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="rm-tr" *ngFor="let user of users">
+                    <tr class="rm-tr" *ngFor="let user of filteredUsers">
                         <td class="rm-td">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="rm-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
@@ -148,7 +175,7 @@ interface RoleDefinition {
                             </button>
                         </td>
                     </tr>
-                    <tr *ngIf="users.length === 0 && !loading">
+                    <tr *ngIf="filteredUsers.length === 0 && !loading">
                         <td colspan="4" class="py-5 text-center">
                             <i class="bi bi-people d-block mb-3 text-secondary" style="font-size: 2.5rem; opacity: 0.35;"></i>
                             <span class="text-secondary">No users found</span>
@@ -504,11 +531,20 @@ interface RoleDefinition {
 })
 export class RoleManagementComponent implements OnInit {
     users: User[] = [];
+    selectedRole = ''; // '' | 'admin' | 'engineer' | 'instructor'
     loading = false;
     showModal = false;
     isEditMode = false;
     submitting = false;
     editingId: string | null = null;
+
+    get filteredUsers(): User[] {
+        return this.selectedRole ? this.users.filter(u => u.role === this.selectedRole) : this.users;
+    }
+
+    filterByRole(role: string) {
+        this.selectedRole = role === '' || this.selectedRole === role ? '' : role;
+    }
 
     form: { name: string; email: string; password: string; role: string } = {
         name: '', email: '', password: '', role: 'engineer'

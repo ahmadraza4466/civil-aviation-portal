@@ -33,12 +33,14 @@ export class InventoryComponent implements OnInit {
     { key: 'status', header: 'Status' }
   ];
 
-  deviceOptions = ['Airbus FFS', 'Diamonds 40/42', 'Airbus Door Trainer', 'MPCT'];
+  deviceOptions = APP_CONSTANTS.DEVICES.map(d => d.name);
   selectedDevice = '';
+  selectedStatus = ''; // '' = all
 
   totalParts = 0;
   lowStockCount = 0;
   outOfStockCount = 0;
+  inStockCount = 0;
 
   ngOnInit() {
     this.parts = [
@@ -47,21 +49,34 @@ export class InventoryComponent implements OnInit {
       { id: '3', partNumber: 'PN-44512', serialNumber: 'SN-0093', status: 'Out of Stock', location: 'Shelf C1', condition: 'Unserviceable', quantity: 0 },
       { id: '4', partNumber: 'PN-99231', serialNumber: 'SN-0094', status: 'In Stock', location: 'Shelf A3', condition: 'New', quantity: 20 },
     ];
-    this.filteredParts = [...this.parts];
-    this.updateSummary();
+    this.applyFilters();
+  }
+
+  filterByStatus(status: string) {
+    this.selectedStatus = status === '' || this.selectedStatus === status ? '' : status;
+    this.applyFilters();
   }
 
   filterByDevice(device: string) {
     this.selectedDevice = device;
-    this.filteredParts = device
-      ? this.parts.filter(p => (p as any).system === device)
-      : [...this.parts];
+    this.applyFilters();
   }
 
-  updateSummary() {
-    this.totalParts = this.parts.length;
-    this.lowStockCount = this.parts.filter(p => p.status === 'Low Stock').length;
-    this.outOfStockCount = this.parts.filter(p => p.status === 'Out of Stock').length;
+  private applyFilters() {
+    const base = this.selectedDevice
+      ? this.parts.filter(p => (p as any).system === this.selectedDevice)
+      : [...this.parts];
+
+    // Counts always from the full/device-filtered list
+    this.totalParts = base.length;
+    this.inStockCount = base.filter(p => p.status === 'In Stock').length;
+    this.lowStockCount = base.filter(p => p.status === 'Low Stock').length;
+    this.outOfStockCount = base.filter(p => p.status === 'Out of Stock').length;
+
+    // Status filter for table
+    this.filteredParts = this.selectedStatus
+      ? base.filter(p => p.status === this.selectedStatus)
+      : base;
   }
 
   onAdd() {
@@ -78,32 +93,16 @@ export class InventoryComponent implements OnInit {
         const pn = (document.getElementById('swal-input1') as HTMLInputElement).value;
         const sn = (document.getElementById('swal-input2') as HTMLInputElement).value;
         const qty = parseInt((document.getElementById('swal-input3') as HTMLInputElement).value, 10);
-
-        if (!pn || !sn || isNaN(qty)) {
-          Swal.showValidationMessage('Please properly fill all fields');
-          return null;
-        }
-
+        if (!pn || !sn || isNaN(qty)) { Swal.showValidationMessage('Please fill all fields'); return null; }
         let status = 'In Stock';
         if (qty === 0) status = 'Out of Stock';
         else if (qty < 5) status = 'Low Stock';
-
         return { pn, sn, qty, status };
       }
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        const newPart: Part = {
-          id: Date.now().toString(),
-          partNumber: result.value.pn,
-          serialNumber: result.value.sn,
-          status: result.value.status,
-          location: 'TBD',
-          condition: 'New',
-          quantity: result.value.qty
-        };
-        this.parts.unshift(newPart);
-        this.filteredParts = [...this.parts];
-        this.updateSummary();
+        this.parts.unshift({ id: Date.now().toString(), partNumber: result.value.pn, serialNumber: result.value.sn, status: result.value.status, location: 'TBD', condition: 'New', quantity: result.value.qty });
+        this.applyFilters();
         Swal.fire('Added', 'Part has been added.', 'success');
       }
     });
@@ -123,44 +122,29 @@ export class InventoryComponent implements OnInit {
         const pn = (document.getElementById('swal-input1') as HTMLInputElement).value;
         const sn = (document.getElementById('swal-input2') as HTMLInputElement).value;
         const qty = parseInt((document.getElementById('swal-input3') as HTMLInputElement).value, 10);
-
-        if (!pn || !sn || isNaN(qty)) {
-          Swal.showValidationMessage('Please properly fill all fields');
-          return null;
-        }
-
+        if (!pn || !sn || isNaN(qty)) { Swal.showValidationMessage('Please fill all fields'); return null; }
         let status = 'In Stock';
         if (qty === 0) status = 'Out of Stock';
         else if (qty < 5) status = 'Low Stock';
-
         return { pn, sn, qty, status };
       }
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        part.partNumber = result.value.pn;
-        part.serialNumber = result.value.sn;
-        part.quantity = result.value.qty;
-        part.status = result.value.status;
-        this.updateSummary();
-        Swal.fire('Updated', 'Part details have been updated.', 'success');
+        const idx = this.parts.findIndex(p => p.id === part.id);
+        if (idx !== -1) {
+          this.parts[idx] = { ...this.parts[idx], partNumber: result.value.pn, serialNumber: result.value.sn, quantity: result.value.qty, status: result.value.status };
+        }
+        this.applyFilters();
+        Swal.fire('Updated', 'Part details updated.', 'success');
       }
     });
   }
 
   onDelete(part: any) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this delete!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+    Swal.fire({ title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it!' }).then((result) => {
       if (result.isConfirmed) {
         this.parts = this.parts.filter(p => p.id !== part.id);
-        this.filteredParts = [...this.parts];
-        this.updateSummary();
+        this.applyFilters();
         Swal.fire('Deleted!', 'The part has been removed.', 'success');
       }
     });
@@ -169,17 +153,7 @@ export class InventoryComponent implements OnInit {
   onViewHistory(part: any) {
     Swal.fire({
       title: 'Part Movement History',
-      html: `
-        <div class="table-responsive">
-          <table class="table table-sm text-start table-dark-custom text-white mb-0" style="background-color: transparent;">
-            <thead><tr><th>Date</th><th>Action</th><th>Location</th></tr></thead>
-            <tbody>
-              <tr><td>2026-03-01</td><td>Received</td><td>Receiving Bay</td></tr>
-              <tr><td>2026-03-02</td><td>Moved</td><td>Shelf A1</td></tr>
-            </tbody>
-          </table>
-        </div>
-      `,
+      html: `<div class="table-responsive"><table class="table table-sm text-start text-white mb-0" style="background:transparent"><thead><tr><th>Date</th><th>Action</th><th>Location</th></tr></thead><tbody><tr><td>2026-03-01</td><td>Received</td><td>Receiving Bay</td></tr><tr><td>2026-03-02</td><td>Moved</td><td>Shelf A1</td></tr></tbody></table></div>`,
       width: 600
     });
   }

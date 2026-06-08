@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { CasesService } from '../../../core/services/cases.service';
+import { APP_CONSTANTS } from '../../../core/constants/app.constants';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-case-list',
   standalone: true,
   imports: [CommonModule, RouterModule, ReusableTableComponent],
-  templateUrl: './case-list.component.html'
+  templateUrl: './case-list.component.html',
+  styleUrls: ['./case-list.component.css']
 })
 export class CaseListComponent implements OnInit {
   cases: any[] = [];
@@ -20,42 +22,60 @@ export class CaseListComponent implements OnInit {
   tableColumns = [
     { key: 'ffsDevice', header: 'Device' },
     { key: 'date', header: 'Date' },
-    { key: 'sequenceNo', header: 'Sequence No' },
-    { key: 'ataNo', header: 'ATA No' },
+    { key: 'sequenceNo', header: 'Seq No' },
+    { key: 'ataNo', header: 'ATA' },
     { key: 'complaint', header: 'Complaint Overview', type: 'truncate' },
     { key: 'status', header: 'Status' }
   ];
 
-  deviceOptions = ['Airbus # 1', 'Airbus # 2', 'DA Part #', 'Door Trainer', 'MPCT'];
+  deviceOptions = APP_CONSTANTS.DEVICES.map(d => d.name);
   selectedDevice = '';
+  selectedStatus = ''; // empty = All
 
+  // Status counts (reflect device filter, not status filter)
   totalCases = 0;
-  openCasesCount = 0;
-  closedCasesCount = 0;
+  openCount = 0;
+  inProgressCount = 0;
+  closedCount = 0;
+  deferredCount = 0;
+  monitoringCount = 0;
 
   ngOnInit() {
     this.casesService.cases$.subscribe(data => {
       this.cases = data;
-      this.applyDeviceFilter();
-      this.updateSummary();
+      this.applyFilters();
     });
+  }
+
+  filterByStatus(status: string) {
+    // Total card always resets to "show all"; other cards toggle
+    this.selectedStatus = status === '' || this.selectedStatus === status ? '' : status;
+    this.applyFilters();
   }
 
   filterByDevice(device: string) {
     this.selectedDevice = device;
-    this.applyDeviceFilter();
+    this.applyFilters();
   }
 
-  private applyDeviceFilter() {
-    this.filteredCases = this.selectedDevice
+  private applyFilters() {
+    // Step 1: device filter
+    const deviceFiltered = this.selectedDevice
       ? this.cases.filter(c => c.ffsDevice === this.selectedDevice)
       : [...this.cases];
-  }
 
-  updateSummary() {
-    this.totalCases = this.cases.length;
-    this.openCasesCount = this.cases.filter(p => p.status === 'Open').length;
-    this.closedCasesCount = this.cases.filter(p => p.status === 'Closed').length;
+    // Step 2: update card counts from device-filtered data (status filter doesn't affect counts)
+    this.totalCases = deviceFiltered.length;
+    this.openCount = deviceFiltered.filter(p => p.status === 'Open').length;
+    this.inProgressCount = deviceFiltered.filter(p => p.status === 'In Progress').length;
+    this.closedCount = deviceFiltered.filter(p => p.status === 'Closed').length;
+    this.deferredCount = deviceFiltered.filter(p => p.status === 'Deferred').length;
+    this.monitoringCount = deviceFiltered.filter(p => p.status === 'Monitoring').length;
+
+    // Step 3: apply status filter for the table
+    this.filteredCases = this.selectedStatus
+      ? deviceFiltered.filter(c => c.status === this.selectedStatus)
+      : deviceFiltered;
   }
 
   onAdd() {
@@ -81,11 +101,9 @@ export class CaseListComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Mock delete via service or local filter
-        this.cases = this.cases.filter(p => p.id !== item.id && p.sequenceNo !== item.sequenceNo);
-        this.filteredCases = [...this.cases];
-        this.updateSummary();
-        Swal.fire('Deleted!', 'The case has been removed.', 'success');
+        this.casesService.deleteCase(item.id).subscribe(() => {
+          Swal.fire('Deleted!', 'The case has been removed.', 'success');
+        });
       }
     });
   }

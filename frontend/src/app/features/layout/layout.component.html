@@ -51,25 +51,13 @@
                     </a>
                 </div>
 
-                <!-- Spare Parts Inventory Section -->
-                <a class="list-group-item list-group-item-action bg-transparent border-0 d-flex justify-content-between align-items-center"
-                    [class.active-menu]="isRouteActive('/app/parts')" (click)="toggleMenu('parts')"
-                    style="cursor: pointer;">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-boxes fs-5 pe-3 sidebar-icon"></i>
-                        <span class="fw-semibold sidebar-text">Spare Parts Inventory</span>
-                    </div>
-                    <i class="bi sidebar-caret" [ngClass]="activeMenus['parts'] ? 'bi-chevron-down' : 'bi-chevron-right'"
-                        style="font-size: 0.8rem; opacity: 0.7;"></i>
+                <!-- Spare Parts Inventory (direct link) -->
+                <a routerLink="/app/parts/inventory" routerLinkActive="active"
+                    class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center"
+                    (click)="closeSidebarOnMobile()">
+                    <i class="bi bi-boxes fs-5 pe-3 sidebar-icon"></i>
+                    <span class="fw-semibold sidebar-text">Spare Parts Inventory</span>
                 </a>
-                <div class="submenu overflow-hidden" *ngIf="activeMenus['parts']">
-                    <a routerLink="/app/parts/inventory" routerLinkActive="active"
-                        class="list-group-item list-group-item-action bg-transparent border-0 d-flex align-items-center ms-3"
-                        (click)="closeSidebarOnMobile()">
-                        <span class="submenu-bullet me-3"></span>
-                        <span class="fw-medium sidebar-text">Inventory Data</span>
-                    </a>
-                </div>
 
                 <!-- Engineers Shifts (top-level) -->
                 <a routerLink="/app/logbook/shifts" routerLinkActive="active"

@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     pendingMaintCount = 0;
     animatedOpenSnags = 0;
     animatedPendingMaint = 0;
+    selectedCardStatus = ''; // '' | 'Open' | 'In Progress'
 
     devices = APP_CONSTANTS.DEVICES;
     ataCodes = APP_CONSTANTS.ATA_CODES.map(a => `${a.code}-${a.description}`);
@@ -60,14 +61,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             this.allCases = cases;
             this.filteredCases = [...cases];
             this.recentCases = cases.slice(0, 5);
-            this.openSnagsCount = cases.filter(c => c.status === 'Open').length || 12; // fallback for design purely
-            this.pendingMaintCount = cases.filter(c => c.status === 'In Progress').length || 3;
+            this.openSnagsCount = cases.filter(c => c.status === 'Open').length;
+            this.pendingMaintCount = cases.filter(c => c.status === 'In Progress').length;
             this.animateCounters();
-
-            this.filterForm.valueChanges.subscribe(values => {
-                this.applyFilters(values);
-            });
         });
+
+        this.filterForm.valueChanges.subscribe(values => {
+            this.applyFilters(values);
+        });
+    }
+
+    filterByCard(status: string) {
+        this.selectedCardStatus = status === '' || this.selectedCardStatus === status ? '' : status;
+        this.applyFilters(this.filterForm.value);
     }
 
     applyFilters(filters: any) {
@@ -76,6 +82,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             if (filters.device && c.ffsDevice !== filters.device) match = false;
             if (filters.ata && c.ataNo !== filters.ata) match = false;
             if (filters.date && c.date !== filters.date) match = false;
+            if (this.selectedCardStatus && c.status !== this.selectedCardStatus) match = false;
             return match;
         });
     }
