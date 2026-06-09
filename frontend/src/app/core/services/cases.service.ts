@@ -30,7 +30,7 @@ export class CasesService {
                         position: 'N/A',
                         unit: 'N/A',
                         orderNo: 'N/A',
-                        complaint: item.title + ' - ' + item.description,
+                        complaint: item.description,
                         action: '',
                         assignedTo: item.assignedTo,
                         actions: item.actions
@@ -50,12 +50,13 @@ export class CasesService {
     }
 
     addCase(newCase: SnagCase): Observable<boolean> {
+        const complaintText = newCase.complaint || '';
         const payload = {
             sequenceNumber: newCase.sequenceNo || Date.now().toString(),
-            title: newCase.complaint?.split(' - ')[0] || 'Snag Report',
+            title: complaintText.substring(0, 80) || 'Snag Report',
             deviceId: newCase.ffsDevice,
-            description: newCase.complaint,
-            reportedBy: 'System User', // Might want to extract from auth
+            description: complaintText,
+            reportedBy: 'System User',
             status: newCase.status || 'Open',
             assignedTo: newCase.assignedTo,
             actions: newCase.actions
@@ -76,11 +77,12 @@ export class CasesService {
     }
 
     updateCase(updatedCase: SnagCase): Observable<boolean> {
+        const complaintText = updatedCase.complaint || '';
         const payload = {
             deviceId: updatedCase.ffsDevice,
             status: updatedCase.status,
-            description: updatedCase.complaint,
-            title: updatedCase.complaint?.split(' - ')[0] || 'Snag Report',
+            description: complaintText,
+            title: complaintText.substring(0, 80) || 'Snag Report',
             assignedTo: updatedCase.assignedTo,
             actions: updatedCase.actions
         };

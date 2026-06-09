@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
+import { filter, take } from 'rxjs/operators';
 import { CasesService } from '../../../core/services/cases.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { UsersService, User } from '../../../core/services/users.service';
@@ -70,30 +71,36 @@ export class NewSnagComponent implements OnInit {
             if (params['id']) {
                 this.currentCaseId = params['id'];
                 this.isEditMode = true;
-                this.casesService.cases$.subscribe(cases => {
-                    const existingCase = cases.find(c => c.id === this.currentCaseId);
-                    if (existingCase) {
-                        this.snagForm.patchValue({
-                            ffsDevice: existingCase.ffsDevice,
-                            date: existingCase.date,
-                            sequenceNo: existingCase.sequenceNo,
-                            status: existingCase.status,
-                            ataNo: existingCase.ataNo || 'None selected',
-                            position: existingCase.position || 'None selected',
-                            unit: existingCase.unit || 'None selected',
-                            orderNo: existingCase.orderNo || '',
-                            assignee: existingCase.assignedTo || 'Unassigned',
-                            complaint: existingCase.complaint
-                        });
 
-                        if (existingCase.actions && Array.isArray(existingCase.actions)) {
-                            this.actionHistory = existingCase.actions.map(a => ({
-                                user: a.author,
-                                date: a.timestamp.split(' ')[0] || new Date().toISOString().split('T')[0],
-                                time: a.timestamp.split(' ')[1] || new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
-                                text: a.message
-                            }));
-                        }
+                // take(1) after the target case is available — prevents re-patching the
+                // form on every subsequent cases$ emission (which happens after each save).
+                this.casesService.cases$.pipe(
+                    filter(cases => cases.some(c => c.id === this.currentCaseId)),
+                    take(1)
+                ).subscribe(cases => {
+                    const existingCase = cases.find(c => c.id === this.currentCaseId);
+                    if (!existingCase) return;
+
+                    this.snagForm.patchValue({
+                        ffsDevice: existingCase.ffsDevice,
+                        date: existingCase.date,
+                        sequenceNo: existingCase.sequenceNo,
+                        status: existingCase.status,
+                        ataNo: existingCase.ataNo || 'None selected',
+                        position: existingCase.position || 'None selected',
+                        unit: existingCase.unit || 'None selected',
+                        orderNo: existingCase.orderNo || '',
+                        assignee: existingCase.assignedTo || 'Unassigned',
+                        complaint: existingCase.complaint
+                    });
+
+                    if (existingCase.actions && Array.isArray(existingCase.actions)) {
+                        this.actionHistory = existingCase.actions.map(a => ({
+                            user: a.author,
+                            date: a.timestamp.split(' ')[0] || new Date().toISOString().split('T')[0],
+                            time: a.timestamp.split(' ')[1] || new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+                            text: a.message
+                        }));
                     }
                 });
             }
